@@ -25,9 +25,10 @@ namespace ReactFrontend.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<string>> GetMqttMessagesReactClient()
+        [Route("GetMessageReactClient")]
+        public ActionResult<List<Message>> GetMqttMessagesReactClient()
         {
-            return new string[] { "value1", "value2" };
+            return RemoteMQTTClient.getMessages();
         }
     }
 }

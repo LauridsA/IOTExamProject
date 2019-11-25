@@ -8,7 +8,7 @@ namespace MQTTClient
 {
     public class MqttClientLocal : IObserver<MqttApplicationMessage>
     {
-        private List<Message> messages { get; set; }
+        private List<Message> messages = new List<Message>();
         public virtual void Subscribe(IObservable<MqttApplicationMessage> mqttApplicationMessage)
         {
             mqttApplicationMessage.Subscribe(this);
@@ -26,7 +26,15 @@ namespace MQTTClient
 
         public void OnNext(MqttApplicationMessage value)
         {
-            Console.WriteLine($"Message Recieved: {Encoding.UTF8.GetString(value.Payload)} \n From topic: {value.Topic}");
+            Message msg = new Message();
+            msg.message = Encoding.UTF8.GetString(value.Payload);
+            msg.topic = value.Topic;
+            messages.Add(msg);
+        }
+
+        public List<Message> getMessages()
+        {
+            return messages;
         }
     }
 }

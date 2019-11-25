@@ -25,7 +25,7 @@ namespace ReactFrontend.MQTTClient
                 AllowWildcardsInTopicFilters = true,
                 MaximumQualityOfService = MqttQualityOfService.AtLeastOnce
             };
-            string topicSubscribe = "song/*";
+            string topicSubscribe = "song/#";
             string topicSubscribe2 = "status";
             remoteClient = await MqttClient.CreateAsync("farmer.cloudmqtt.com", configuration);
             await remoteClient.ConnectAsync(new MqttClientCredentials(clientId: "MyCoolNewClient", "msxwryld", "7z4Ms3G5-kfD"));
@@ -55,9 +55,9 @@ namespace ReactFrontend.MQTTClient
             }
         }
 
-        public static string getMessages()
+        public static List<Message> getMessages()
         {
-            return "";
+            return localClient.getMessages();
         }
 
     }
