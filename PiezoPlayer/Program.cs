@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Device.Gpio;
 using System.Threading;
 using Iot.Device.CpuTemperature;
 
@@ -9,14 +10,36 @@ namespace PiezoPlayer
         static CpuTemperature temperature = new CpuTemperature();
         static void Main(string[] args)
         {
-            while (true)
+            var pin = 17;
+            var lightTimeInMilliseconds = 1000;
+            var dimTimeInMilliseconds = 200;
+
+            Console.WriteLine($"Let's blink an LED!");
+            using (GpioController controller = new GpioController())
             {
-                if (temperature.IsAvailable)
+                controller.OpenPin(pin, PinMode.Output);
+                Console.WriteLine($"GPIO pin enabled for use: {pin}");
+
+                Console.CancelKeyPress += (object sender, ConsoleCancelEventArgs eventArgs) =>
                 {
-                    Console.WriteLine($"The CPU temperature is {temperature.Temperature.Celsius}");
+                    controller.Dispose();
+                };
+
+                while (true)
+                {
+                    if (temperature.IsAvailable)
+                    {
+                        Console.WriteLine($"The CPU temperature is {temperature.Temperature.Celsius}");
+
+                        Console.WriteLine($"Light for {lightTimeInMilliseconds}ms");
+                        controller.Write(pin, PinValue.High);
+                        Thread.Sleep(lightTimeInMilliseconds);
+                        Console.WriteLine($"Dim for {dimTimeInMilliseconds}ms");
+                        controller.Write(pin, PinValue.Low);
+                        Thread.Sleep(dimTimeInMilliseconds);
+                    }
+                    Thread.Sleep(2000); // sleep for 2000 milliseconds, 2 seconds
                 }
-                Thread.Sleep(2000); // sleep for 2000 milliseconds, 2 seconds
             }
         }
     }
-}
