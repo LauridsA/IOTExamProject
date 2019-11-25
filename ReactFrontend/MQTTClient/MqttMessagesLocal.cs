@@ -5,11 +5,9 @@ using System.Threading.Tasks;
 
 namespace ReactFrontend.MQTTClient
 {
-
     public class Message
     {
         public string message { get; set; }
         public string topic { get; set; }
-
     }
 }
