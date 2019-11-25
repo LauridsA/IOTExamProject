@@ -12,44 +12,30 @@ namespace MQTTClient
         {
             Console.WriteLine("Hello World!");
 
-            whatever().Wait();
+            setup_template().Wait();
         }
 
-        public static async Task whatever()
+        public static async Task setup_template()
         {
-            Client gg = new Client();
+            MqttClientLocal localClient = new MqttClientLocal();
             var configuration = new MqttConfiguration()
             {
                 Port = 12393,
                 KeepAliveSecs = 0,
                 WaitTimeoutSecs = 5,
                 BufferSize = 128 * 1024,
-                AllowWildcardsInTopicFilters = true
+                AllowWildcardsInTopicFilters = true,
+                MaximumQualityOfService = MqttQualityOfService.AtLeastOnce
             };
-            var client = await MqttClient.CreateAsync("farmer.cloudmqtt.com", configuration);
-            var sessionState = await client.ConnectAsync(new MqttClientCredentials(clientId: "MyCoolNewClient", "msxwryld", "7z4Ms3G5-kfD"));
-            await client.SubscribeAsync("foo/bar", MqttQualityOfService.AtLeastOnce);
-            await client.SubscribeAsync("foo/bare", MqttQualityOfService.ExactlyOnce);
-
-            Console.WriteLine("subbed to something");
-
-            gg.Subscribe(client.MessageStream);
-
-
-            for (int i = 1; i < 15; i++)
-            {
-            }
-
-            while (true)
-            {
-                var input = Console.ReadLine();
-                var mymessage = new MqttApplicationMessage("foo/bar", Encoding.UTF8.GetBytes(input));
-                client.PublishAsync(mymessage, MqttQualityOfService.AtLeastOnce).Wait();
-
-                if (input == "faggot")
-                    return;
-            }
-            Console.Read();
+            string topicSubscribe = "my/topic";
+            string topicPost = "my/other/topic";
+            var remoteClient = await MqttClient.CreateAsync("farmer.cloudmqtt.com", configuration);
+            await remoteClient.ConnectAsync(new MqttClientCredentials(clientId: "MyCoolNewClient", "msxwryld", "7z4Ms3G5-kfD"));
+            await remoteClient.SubscribeAsync(topicSubscribe, MqttQualityOfService.AtLeastOnce);
+            localClient.Subscribe(remoteClient.MessageStream);
+            string payloadToSend = "MY MESSAGE TO BE SENT";
+            var mymessage = new MqttApplicationMessage(topicPost, Encoding.UTF8.GetBytes(payloadToSend));
+            remoteClient.PublishAsync(mymessage, MqttQualityOfService.AtLeastOnce).Wait();
         }
     }
 }
