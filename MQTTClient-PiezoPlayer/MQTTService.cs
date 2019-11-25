@@ -8,15 +8,60 @@ namespace MQTTClient
 {
     public class MQTTService
     {
+        //Privates
         private static IMqttClient client;
+        private string _basepath { get; set; }
+        private string _username { get; set; }
+        private string _password { get; set; }
+        private string _clientName { get; set; }
+
+        //Publics
+        #region publics
+        public string BasePath
+        {
+            get
+            {
+                return _basepath;
+            }
+        }
+
+        public string Username
+        {
+            get
+            {
+                return _username;
+            }
+        }
+
+        public string Password
+        {
+            get
+            {
+                return _password;
+            }
+        }
+
+        public string ClientName
+        {
+            get
+            {
+                return _clientName;
+            }
+        }
+        #endregion
 
         public MQTTService()
         {
-            
+
         }
 
         public async Task<IMqttClient> SetupClient(int port, string basepath, string username, string password, string clientname)
         {
+            _basepath = basepath;
+            _username = username;
+            _password = password;
+            _clientName = clientname;
+
             var configuration = new MqttConfiguration()
             {
                 Port = port,
