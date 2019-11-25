@@ -29,10 +29,10 @@ namespace PiezoPlayer
                 {
                     Console.WriteLine($"Light for {lightTimeInMilliseconds}ms");
                     controller.Write(pin, PinValue.High);
-                    Thread.Sleep(10000);
+                    Thread.Sleep(lightTimeInMilliseconds);
                     Console.WriteLine($"Dim for {dimTimeInMilliseconds}ms");
                     controller.Write(pin, PinValue.Low);
-                    Thread.Sleep(50);
+                    Thread.Sleep(dimTimeInMilliseconds);
 
                     if (temperature.IsAvailable)
                     {
