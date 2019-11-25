@@ -27,18 +27,17 @@ namespace PiezoPlayer
 
                 while (true)
                 {
+                    Console.WriteLine($"Light for {lightTimeInMilliseconds}ms");
+                    controller.Write(pin, PinValue.High);
+                    Thread.Sleep(10000);
+                    Console.WriteLine($"Dim for {dimTimeInMilliseconds}ms");
+                    controller.Write(pin, PinValue.Low);
+                    Thread.Sleep(50);
+
                     if (temperature.IsAvailable)
                     {
                         Console.WriteLine($"The CPU temperature is {temperature.Temperature.Celsius}");
-
-                        Console.WriteLine($"Light for {lightTimeInMilliseconds}ms");
-                        controller.Write(pin, PinValue.High);
-                        Thread.Sleep(lightTimeInMilliseconds);
-                        Console.WriteLine($"Dim for {dimTimeInMilliseconds}ms");
-                        controller.Write(pin, PinValue.Low);
-                        Thread.Sleep(dimTimeInMilliseconds);
                     }
-                    Thread.Sleep(2000); // sleep for 2000 milliseconds, 2 seconds
                 }
             }
         }
