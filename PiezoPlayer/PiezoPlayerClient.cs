@@ -87,7 +87,8 @@ namespace PiezoPlayer
                         controller.Write(_speakerGPIOPortMap[tone.speakerIdToPlayOn], PinValue.High);
                         Thread.Sleep(tone.delay);
                         controller.Write(_speakerGPIOPortMap[tone.speakerIdToPlayOn], PinValue.Low);
-                        Thread.Sleep(tone.delay);
+                        var dbl = tone.delay * 0.3;
+                        Thread.Sleep(Convert.ToInt32(dbl));
                         tone = tone.nextTone;
                         if (tone == null)
                             tone = s.firstTone;
