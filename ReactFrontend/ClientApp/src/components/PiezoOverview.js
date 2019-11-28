@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 
-
 export class PiezoOverview extends Component {
   static displayName = PiezoOverview.name;
 
@@ -8,6 +7,26 @@ export class PiezoOverview extends Component {
     super(props);
     this.state = { messages: [], topics: [] };
       this.getMessages = this.getMessages.bind(this);
+      this.postMessageSong = this.postMessageSong.bind(this);
+      this.postMessageTrack = this.postMessageTrack.bind(this);
+  }
+
+  postMessageSong(e) {
+    if (this.inputS.value == "") {
+       this.inputS.value = "[Empty]"
+    }
+    fetch('api/piezo/postMqttMessage/song/'+this.inputS.value , {
+      method: 'POST'
+    })
+  }
+
+  postMessageTrack(e) {
+    if (this.inputT.value == "") {
+       this.inputT.value = "[Empty]"
+    }
+    fetch('api/piezo/postMqttMessage/track/'+this.inputT.value , {
+      method: 'POST'
+    })
   }
 
     getMessages () {
@@ -17,12 +36,16 @@ export class PiezoOverview extends Component {
        .then(response => {
         //callback
         response.json().then(data => {
+          var datalistT = [];
+          var datalistM = [];
           //we implement the logic here.
           data.forEach(entry => {
-            this.setState({
-              messages: this.state.messages.concat(entry['message']),
-              topics: this.state.topics.concat(entry['topic'])
-            })
+            datalistM = datalistM.concat(entry['message'])
+            datalistT = datalistT.concat(entry['topic'])
+          })
+          this.setState({
+            messages: datalistM,
+            topics: datalistT
           });
           console.log(this.state.messages)
           console.log(this.state.topics)
@@ -40,17 +63,19 @@ export class PiezoOverview extends Component {
             <p> Messages: </p>
             <ul>
               {this.state.messages.map(item => {
-              return <li key={item}>{item}</li>
+              return <li style={{listStyleType: "none", fontWeight: "bold", fontSize: "17px"}} key={item}> Message: {item}</li>
               })}
-            </ul>
-          <p> With Respective Topics: </p>
-          <ul>
               {this.state.topics.map(item => {
-              return <li key={item}>{item}</li>
+              return <li style={{listStyleType: "none", fontSize: "12px", color: "#999"}} key={item}>With Topic: {item}</li>
               })}
             </ul>
           </div>
-
+          <div>Player</div>
+    <textarea  type="text" placeholder="Play/Stop/Pause/Unpause" ref={(input) => this.inputS = input}/><br />
+            <button className="btn btn-primary" onClick={this.postMessageSong}>player</button>
+            <div>Track</div>
+    <textarea  type="text" placeholder="Next/Prev" ref={(input) => this.inputT = input}/> <br />
+            <button className="btn btn-primary" onClick={this.postMessageTrack}>song</button>
       </div>
     );
   }

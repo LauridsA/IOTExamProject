@@ -18,10 +18,18 @@ namespace ReactFrontend.Controllers
             return new string[] { "value1", "value2" };
         }
 
-        [HttpPost]
-        public void postMqttMessage([FromBody] MQTTMessageRequest request )
+        [HttpPost("postMqttMessage/song/{message}")]
+        public void postMqttMessageSong([FromRoute]string message)
         {
-            RemoteMQTTClient.postMessage(request.topic, request.message);
+            string topic = "song";
+            RemoteMQTTClient.postMessage(topic, message);
+        }
+
+        [HttpPost("postMqttMessage/track/{message}")]
+        public void postMqttMessageTrack([FromRoute]string message)
+        {
+            string topic = "track";
+            RemoteMQTTClient.postMessage(topic, message);
         }
 
         [HttpGet]
