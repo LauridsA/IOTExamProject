@@ -27,7 +27,6 @@ namespace PiezoPlayer
             await client.Subscribe("test/#"); //REMOVE FOR PROD
             Subscribe(client.GetMessageStream());
             PopulateSpeakerGPIOPorts();
-            Flicker();
         }
 
         private void PopulateSpeakerGPIOPorts()
@@ -182,19 +181,24 @@ namespace PiezoPlayer
             Console.WriteLine($"Topic: {value.Topic}. {Environment.NewLine}Message: {payload}");
             if (topic == "song/track")
             {
+                if(payload == "next")
+                {
+                    // next track
+                }
+                else if (payload == "prev")
+                {
+                    // previous track
+                }
+                else
+                {
+                    //Look up payload as song in API
+                }
+
                 // Get value.payload from backend (songname)
             }
-            if (topic == "song/next")
+            if (topic == "song")
             {
-                // Get the next song
-            }
-            if (topic == "song/prev")
-            {
-                // Get the previous song
-            }
-            if (topic == "song/play")
-            {
-                if (payload == "start")
+                if (payload == "play")
                 {
                     Play();
                     playing = true;
@@ -214,8 +218,15 @@ namespace PiezoPlayer
             }
             if (topic == "test/flicker")
             {
-                Console.WriteLine("Flickering with a delay of " + payload + "ms between on and off");
-                v = int.Parse(payload);
+                if(payload == "start")
+                {
+                    Flicker();
+                }
+                else
+                {
+                    Console.WriteLine("Flickering with a delay of " + payload + "ms between on and off");
+                    v = int.Parse(payload);
+                }
             }
         }
 
