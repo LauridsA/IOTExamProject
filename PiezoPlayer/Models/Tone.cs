@@ -13,5 +13,15 @@ namespace PiezoPlayer.Models
         public Tone lastTone;
         public int speakerIdToPlayOn;
         public int delay;
+        public Tone(Song song, Tone nextTone, Tone previousTone, Tone firstTone, Tone lastTone, int speakerIdToPlayOn, int delay)
+        {
+            this.song = song;
+            this.nextTone = nextTone;
+            this.previousTone = previousTone;
+            this.firstTone = firstTone;
+            this.lastTone = lastTone;
+            this.speakerIdToPlayOn = speakerIdToPlayOn;
+            this.delay = delay;
+        }
     }
 }
