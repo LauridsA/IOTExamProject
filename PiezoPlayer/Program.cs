@@ -20,6 +20,7 @@ namespace PiezoPlayer
         public static void Main(string[] args)
         {
             PiezoPlayerClient pp = new PiezoPlayerClient();
+            Console.WriteLine("Im running");
             pp.SetupPlayer().Wait();
             pp.Play().Wait();
             while (true) ;
