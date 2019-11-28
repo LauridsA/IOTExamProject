@@ -3,7 +3,6 @@ using System.Device.Gpio;
 using System.Net.Mqtt;
 using System.Text;
 using System.Threading;
-using Iot.Device.CpuTemperature;
 using MQTTClient;
 
 namespace PiezoPlayer
@@ -17,13 +16,14 @@ namespace PiezoPlayer
         static int speaker1High = 17;
         static int speaker2Middle = 18;
         static int speaker3Low = 19;
-        static CpuTemperature temperature = new CpuTemperature();
 
         public static void Main(string[] args)
         {
             PiezoPlayerClient pp = new PiezoPlayerClient();
-            pp.SetupPlayer();
+            Console.WriteLine("Im running");
+            pp.SetupPlayer().Wait();
             pp.Play().Wait();
+            while (true) ;
         }
     }
 }
