@@ -20,8 +20,8 @@ namespace PiezoPlayer
         public static void Main(string[] args)
         {
             PiezoPlayerClient pp = new PiezoPlayerClient();
-            pp.SetupPlayer();
-            pp.Play().Wait();
+            pp.SetupPlayer().Wait();
+            pp.PlayLocal().Wait();
         }
     }
 }
