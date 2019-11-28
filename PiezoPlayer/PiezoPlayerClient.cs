@@ -39,9 +39,9 @@ namespace PiezoPlayer
             var s = new Song();
             // (Song song, Tone nextTone, Tone previousTone, Tone firstTone, Tone lastTone, int speakerIdToPlayOn, int delay)
             var tone1 = new Tone(s, null, null, null, null, 1, 1000);
-            var tone2 = new Tone(s, null, null, null, null, 1, 4000);
-            var tone3 = new Tone(s, null, null, null, null, 1, 3000);
-            var tone4 = new Tone(s, null, null, null, null, 1, 2000);
+            var tone2 = new Tone(s, null, null, null, null, 1, 2000);
+            var tone3 = new Tone(s, null, null, null, null, 1, 1500);
+            var tone4 = new Tone(s, null, null, null, null, 1, 500);
 
             tone1.nextTone = tone2;
             tone1.firstTone = tone1;
@@ -87,6 +87,7 @@ namespace PiezoPlayer
                         controller.Write(_speakerGPIOPortMap[tone.speakerIdToPlayOn], PinValue.High);
                         Thread.Sleep(tone.delay);
                         controller.Write(_speakerGPIOPortMap[tone.speakerIdToPlayOn], PinValue.Low);
+                        Thread.Sleep(tone.delay);
                         tone = tone.nextTone;
                         if (tone == null)
                             tone = s.firstTone;
