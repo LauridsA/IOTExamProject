@@ -23,6 +23,7 @@ namespace PiezoPlayer
             MQTTService client = new MQTTService();
             await client.SetupClient(12393, "farmer.cloudmqtt.com", "msxwryld", "7z4Ms3G5-kfD", "PiezoPlayer");
             await client.Subscribe("Song/#");
+            await client.Subscribe("test/#"); //REMOVE FOR PROD
             Subscribe(client.GetMessageStream());
             PopulateSpeakerGPIOPorts();
         }
