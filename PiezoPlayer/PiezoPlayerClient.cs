@@ -193,6 +193,7 @@ namespace PiezoPlayer
             {
                 if (payload == "start")
                 {
+                    Play();
                     playing = true;
                 }
                 else if (payload == "stop")
@@ -208,6 +209,35 @@ namespace PiezoPlayer
                     paused = false;
                 }
             }
+            if (topic == "test/flicker")
+            {
+                Flicker(int.Parse(payload));
+            }
+        }
+
+        private void Flicker(int v)
+        {
+            using (GpioController controller = new GpioController())
+            {
+                controller.OpenPin(_speakerGPIOPortMap[1], PinMode.Output);
+                controller.OpenPin(_speakerGPIOPortMap[2], PinMode.Output);
+                controller.OpenPin(_speakerGPIOPortMap[3], PinMode.Output);
+                Console.WriteLine($"GPIO pins enabled for use: {_speakerGPIOPortMap[1]}, {_speakerGPIOPortMap[2]}, {_speakerGPIOPortMap[3]}");
+
+                Console.CancelKeyPress += (object sender, ConsoleCancelEventArgs eventArgs) =>
+                {
+                    controller.Dispose();
+                };
+
+                while (paused)
+                {
+                    controller.Write(17, PinValue.High);
+                    Thread.Sleep(v);
+                    controller.Write(17, PinValue.Low);
+                    Thread.Sleep(v);
+                }
+            }
         }
     }
+}
 }
