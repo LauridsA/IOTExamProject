@@ -21,6 +21,7 @@ namespace PiezoPlayer
         {
             PiezoPlayerClient pp = new PiezoPlayerClient();
             pp.SetupPlayer().Wait();
+            pp.Play().Wait();
             while (true) ;
         }
     }

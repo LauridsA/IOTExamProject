@@ -200,7 +200,6 @@ namespace PiezoPlayer
             {
                 if (payload == "play")
                 {
-                    Play();
                     playing = true;
                 }
                 else if (payload == "stop")
