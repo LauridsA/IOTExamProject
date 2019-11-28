@@ -15,6 +15,7 @@ namespace PiezoPlayer
     {
         static bool playing = false;
         static bool paused = false;
+        static int v = 5;
         static Dictionary<int, int> _speakerGPIOPortMap = new Dictionary<int, int>();
         private List<Message> messages { get; set; }
 
@@ -186,7 +187,7 @@ namespace PiezoPlayer
             {
                 // Get the next song
             }
-            if (topic == "song/previous")
+            if (topic == "song/prev")
             {
                 // Get the previous song
             }
@@ -213,11 +214,12 @@ namespace PiezoPlayer
             if (topic == "test/flicker")
             {
                 Console.WriteLine("Flickering with a delay of " + payload + "ms between on and off");
-                Flicker(int.Parse(payload));
+                v = int.Parse(payload);
+                Flicker();
             }
         }
 
-        private void Flicker(int v)
+        private async Task Flicker()
         {
             using (GpioController controller = new GpioController())
             {
@@ -231,7 +233,7 @@ namespace PiezoPlayer
                     controller.Dispose();
                 };
 
-                while (paused)
+                while (true)
                 {
                     controller.Write(17, PinValue.High);
                     Thread.Sleep(v);
