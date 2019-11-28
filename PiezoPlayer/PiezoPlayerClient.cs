@@ -78,20 +78,23 @@ namespace PiezoPlayer
 
                 while (true)
                 {
-                    while (tone != null)
+                    while (playing)
                     {
-                        while (paused)
-                            Thread.Sleep(1000);
+                        while (tone != null)
+                        {
+                            while (paused)
+                                Thread.Sleep(1000);
 
-                        Console.WriteLine($"Playing tone for {tone.delay} for ms on speaker with id {tone.speakerIdToPlayOn}");
-                        controller.Write(_speakerGPIOPortMap[tone.speakerIdToPlayOn], PinValue.High);
-                        Thread.Sleep(tone.delay);
-                        controller.Write(_speakerGPIOPortMap[tone.speakerIdToPlayOn], PinValue.Low);
-                        var dbl = tone.delay * 0.3;
-                        Thread.Sleep(Convert.ToInt32(dbl));
-                        tone = tone.nextTone;
-                        if (tone == null)
-                            tone = s.firstTone;
+                            Console.WriteLine($"Playing tone for {tone.delay} for ms on speaker with id {tone.speakerIdToPlayOn}");
+                            controller.Write(_speakerGPIOPortMap[tone.speakerIdToPlayOn], PinValue.High);
+                            Thread.Sleep(tone.delay);
+                            controller.Write(_speakerGPIOPortMap[tone.speakerIdToPlayOn], PinValue.Low);
+                            var dbl = tone.delay * 0.3;
+                            Thread.Sleep(Convert.ToInt32(dbl));
+                            tone = tone.nextTone;
+                            if (tone == null)
+                                tone = s.firstTone;
+                        }
                     }
                 }
             }
@@ -198,12 +201,10 @@ namespace PiezoPlayer
                 }
                 else if (payload == "pause")
                 {
-                    playing = false;
                     paused = true;
                 }
                 else if (payload == "unpause")
                 {
-                    playing = true;
                     paused = false;
                 }
             }
