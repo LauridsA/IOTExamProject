@@ -211,6 +211,7 @@ namespace PiezoPlayer
             }
             if (topic == "test/flicker")
             {
+                Console.WriteLine("Flickering with a delay of " + payload + "ms between on and off");
                 Flicker(int.Parse(payload));
             }
         }
