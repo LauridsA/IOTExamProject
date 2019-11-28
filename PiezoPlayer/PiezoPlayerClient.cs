@@ -27,6 +27,7 @@ namespace PiezoPlayer
             await client.Subscribe("test/#"); //REMOVE FOR PROD
             Subscribe(client.GetMessageStream());
             PopulateSpeakerGPIOPorts();
+            Flicker();
         }
 
         private void PopulateSpeakerGPIOPorts()
@@ -215,7 +216,6 @@ namespace PiezoPlayer
             {
                 Console.WriteLine("Flickering with a delay of " + payload + "ms between on and off");
                 v = int.Parse(payload);
-                Flicker();
             }
         }
 
