@@ -29,8 +29,8 @@ namespace MQTTClient
             };
             string topicSubscribe = "my/topic";
             string topicPost = "my/other/topic";
-            var remoteClient = await MqttClient.CreateAsync("farmer.cloudmqtt.com", configuration);
-            await remoteClient.ConnectAsync(new MqttClientCredentials(clientId: "MyCoolNewClient", "msxwryld", "7z4Ms3G5-kfD"));
+            var remoteClient = await MqttClient.CreateAsync("localhost", configuration);
+            await remoteClient.ConnectAsync(new MqttClientCredentials(clientId: "Frontend", "front", "frontpass"));
             await remoteClient.SubscribeAsync(topicSubscribe, MqttQualityOfService.AtLeastOnce);
             localClient.Subscribe(remoteClient.MessageStream);
             string payloadToSend = "MY MESSAGE TO BE SENT";

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mqtt;
+using System.Net.Mqtt.Sdk.Bindings;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,7 +20,7 @@ namespace ReactFrontend.MQTTClient
             var configuration = new MqttConfiguration()
             {
                 Port = 12393,
-                KeepAliveSecs = 0,
+                KeepAliveSecs = 10,
                 WaitTimeoutSecs = 5,
                 BufferSize = 128 * 1024,
                 AllowWildcardsInTopicFilters = true,
@@ -27,8 +28,8 @@ namespace ReactFrontend.MQTTClient
             };
             string topicSubscribe = "song/#";
             string topicSubscribe2 = "status";
-            remoteClient = await MqttClient.CreateAsync("farmer.cloudmqtt.com", configuration);
-            await remoteClient.ConnectAsync(new MqttClientCredentials(clientId: "MyCoolNewClient", "msxwryld", "7z4Ms3G5-kfD"));
+            remoteClient = await MqttClient.CreateAsync("broker.busk.cf", configuration);
+            await remoteClient.ConnectAsync(new MqttClientCredentials(clientId: "Frontend", "front", "frontpass"));
             await remoteClient.SubscribeAsync(topicSubscribe, MqttQualityOfService.AtLeastOnce); //subscribe on cloud mqtt
             await remoteClient.SubscribeAsync(topicSubscribe2, MqttQualityOfService.AtLeastOnce); //subscribe on cloud mqtt
             localClient.Subscribe(remoteClient.MessageStream); // subscribe to the iobservable (the response message stream)

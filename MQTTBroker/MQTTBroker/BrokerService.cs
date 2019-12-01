@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Mqtt;
+using System.Net.Mqtt.Sdk.Bindings;
 using System.Text;
 using System.Threading;
 
@@ -11,7 +12,6 @@ namespace MQTTBroker
         //Privates
         private static IMqttServer _server;
         private static AuthProvider _authProv;
-        public EventHandler<string> _eventHandler;
         private MqttQualityOfService _qos { get; set; }
 
         public BrokerService()
@@ -24,18 +24,22 @@ namespace MQTTBroker
             _authProv.AddClientToAuth(clientId, username, password);
         }
 
-
         public void Setup(int port)
         {
-            MqttConfiguration config = new MqttConfiguration();
-            config.AllowWildcardsInTopicFilters = true;
-            config.ConnectionTimeoutSecs = 10;
-            config.KeepAliveSecs = 10;
-            config.WaitTimeoutSecs = 10;
-            config.Port = port;
-            config.MaximumQualityOfService = MqttQualityOfService.AtLeastOnce;
-            _authProv.AddClientToAuth("PiezoPlayer", "user", "pass");
+            MqttConfiguration config = new MqttConfiguration()
+            {
+                AllowWildcardsInTopicFilters = true,
+                ConnectionTimeoutSecs = 10,
+                KeepAliveSecs = 10,
+                WaitTimeoutSecs = 10,
+                Port = port,
+                MaximumQualityOfService = MqttQualityOfService.AtLeastOnce
+            };
             _server = MqttServer.Create(config, null, _authProv);
+
+            _authProv.AddClientToAuth("PiezoPlayer", "player", "piezopass");
+            _authProv.AddClientToAuth("Frontend", "front", "frontpass");
+            _authProv.AddClientToAuth("FlickClient", "flick", "flickpass");
             _server.MessageUndelivered += _server_MessageUndelivered;
             _server.ClientConnected += _server_ClientConnected;
             _server.ClientDisconnected += _server_ClientDisconnected;
@@ -65,7 +69,7 @@ namespace MQTTBroker
 
         public IMqttServer GetServer()
         {
-            return GetServer();
+            return _server;
         }
     }
 }
