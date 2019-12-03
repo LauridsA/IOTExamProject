@@ -22,7 +22,7 @@ namespace PiezoPlayer
         public async Task SetupPlayer()
         {
             MQTTService client = new MQTTService();
-            await client.SetupClient(12393, "broker.busk.cf", "user", "pass", "PiezoPlayer");
+            await client.SetupClient(12393, "broker.busk.cf", "piezo", "piezopass", "PiezoPlayer");
             await client.Subscribe("Song/#");
             await client.Subscribe("test/#"); //REMOVE FOR PROD
             Subscribe(client.GetMessageStream());
