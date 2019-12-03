@@ -39,7 +39,7 @@ namespace PiezoPlayer
 
         public async Task Play()
         {
-            var s = new Song
+            s = new Song
                 (
                     new List<Tone>()
                     {
