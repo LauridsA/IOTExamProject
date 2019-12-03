@@ -16,6 +16,7 @@ namespace PiezoPlayer
         static bool playing = false;
         static bool paused = false;
         static int v = 5;
+        Song s = null;
         static Dictionary<int, int> _speakerGPIOPortMap = new Dictionary<int, int>();
         private List<Message> messages { get; set; }
 
@@ -38,36 +39,24 @@ namespace PiezoPlayer
 
         public async Task Play()
         {
-            var s = new Song();
+            var s = new Song
+                (
+                    new List<Tone>()
+                    {
+                        new Tone(1, 10000, 200, 0),
+                        new Tone(1, 5000, 1500, 200),
+                        new Tone(1, 11000, 1000, 800),
+                        new Tone(1, 2000, 600, 100),
+                        new Tone(1, 4000, 2500, 600),
+                        new Tone(1, 9000, 800, 600),
+                        new Tone(1, 1500, 1000, 1000),
+                        new Tone(1, 8000, 300, 100),
+                    }
+                );
             // (Song song, Tone nextTone, Tone previousTone, Tone firstTone, Tone lastTone, int speakerIdToPlayOn, int delay)
-            var tone1 = new Tone(s, null, null, null, null, 1, 1000);
-            var tone2 = new Tone(s, null, null, null, null, 1, 2000);
-            var tone3 = new Tone(s, null, null, null, null, 1, 1500);
-            var tone4 = new Tone(s, null, null, null, null, 1, 500);
 
-            tone1.nextTone = tone2;
-            tone1.firstTone = tone1;
-            tone1.lastTone = tone4;
-
-            tone2.firstTone = tone1;
-            tone2.previousTone = tone1;
-            tone2.nextTone = tone3;
-            tone2.lastTone = tone4;
-
-            tone3.firstTone = tone1;
-            tone3.previousTone = tone2;
-            tone3.nextTone = tone4;
-            tone3.lastTone = tone4;
-
-            tone4.firstTone = tone1;
-            tone4.previousTone = tone3;
-            tone4.nextTone = null;
-            tone4.lastTone = tone4;
-
-            s.firstTone = tone1;
             using (GpioController controller = new GpioController())
             {
-                var tone = s.firstTone;
                 controller.OpenPin(_speakerGPIOPortMap[1], PinMode.Output);
                 controller.OpenPin(_speakerGPIOPortMap[2], PinMode.Output);
                 controller.OpenPin(_speakerGPIOPortMap[3], PinMode.Output);
@@ -78,86 +67,84 @@ namespace PiezoPlayer
                     controller.Dispose();
                 };
 
-                while (true)
+                while (playing)
                 {
-
-                    while (tone != null)
+                    foreach (var tone in s.tones)
                     {
-                        while (playing)
+                        if (!playing)
                         {
-                            while (paused)
-                                Thread.Sleep(1000);
-
-                            Console.WriteLine($"Playing tone for {tone.delay} for ms on speaker with id {tone.speakerIdToPlayOn}");
-                            controller.Write(_speakerGPIOPortMap[tone.speakerIdToPlayOn], PinValue.High);
-                            Thread.Sleep(tone.delay);
                             controller.Write(_speakerGPIOPortMap[tone.speakerIdToPlayOn], PinValue.Low);
-                            var dbl = tone.delay * 0.3;
-                            Thread.Sleep(Convert.ToInt32(dbl));
-                            tone = tone.nextTone;
-                            if (tone == null)
-                                tone = s.firstTone;
+                            break;
                         }
+                        while (paused)
+                            Thread.Sleep(1000);
+
+                        Console.WriteLine($"Playing delaying tone for {tone.delayBeforePlaying} before playing tone for {tone.duration} ms on speaker with id {tone.speakerIdToPlayOn}");
+                        Thread.Sleep(tone.delayBeforePlaying);
+                        controller.Write(_speakerGPIOPortMap[tone.speakerIdToPlayOn], PinValue.High);
+                        Thread.Sleep(tone.duration);
+                        controller.Write(_speakerGPIOPortMap[tone.speakerIdToPlayOn], PinValue.Low);
                     }
+
                 }
             }
         }
 
-        public async Task PlayLocal()
-        {
-            var s = new Song();
-            // (Song song, Tone nextTone, Tone previousTone, Tone firstTone, Tone lastTone, int speakerIdToPlayOn, int delay)
-            var tone1 = new Tone(s, null, null, null, null, 1, 1000);
-            var tone2 = new Tone(s, null, null, null, null, 1, 4000);
-            var tone3 = new Tone(s, null, null, null, null, 1, 3000);
-            var tone4 = new Tone(s, null, null, null, null, 1, 2000);
+        //public async Task PlayLocal()
+        //{
+        //    var s = new Song();
+        //    // (Song song, Tone nextTone, Tone previousTone, Tone firstTone, Tone lastTone, int speakerIdToPlayOn, int delay)
+        //    var tone1 = new Tone(s, null, null, null, null, 1, 1000);
+        //    var tone2 = new Tone(s, null, null, null, null, 1, 4000);
+        //    var tone3 = new Tone(s, null, null, null, null, 1, 3000);
+        //    var tone4 = new Tone(s, null, null, null, null, 1, 2000);
 
-            tone1.nextTone = tone2;
-            tone1.firstTone = tone1;
-            tone1.lastTone = tone4;
+        //    tone1.nextTone = tone2;
+        //    tone1.firstTone = tone1;
+        //    tone1.lastTone = tone4;
 
-            tone2.firstTone = tone1;
-            tone2.previousTone = tone1;
-            tone2.nextTone = tone3;
-            tone2.lastTone = tone4;
+        //    tone2.firstTone = tone1;
+        //    tone2.previousTone = tone1;
+        //    tone2.nextTone = tone3;
+        //    tone2.lastTone = tone4;
 
-            tone3.firstTone = tone1;
-            tone3.previousTone = tone2;
-            tone3.nextTone = tone4;
-            tone3.lastTone = tone4;
+        //    tone3.firstTone = tone1;
+        //    tone3.previousTone = tone2;
+        //    tone3.nextTone = tone4;
+        //    tone3.lastTone = tone4;
 
-            tone4.firstTone = tone1;
-            tone4.previousTone = tone3;
-            tone4.nextTone = null;
-            tone4.lastTone = tone4;
+        //    tone4.firstTone = tone1;
+        //    tone4.previousTone = tone3;
+        //    tone4.nextTone = null;
+        //    tone4.lastTone = tone4;
 
-            s.firstTone = tone1;
+        //    s.firstTone = tone1;
 
-            var tone = s.firstTone;
+        //    var tone = s.firstTone;
 
-            Console.WriteLine($"GPIO pins enabled for use: {_speakerGPIOPortMap[1]}, {_speakerGPIOPortMap[2]}, {_speakerGPIOPortMap[3]}");
+        //    Console.WriteLine($"GPIO pins enabled for use: {_speakerGPIOPortMap[1]}, {_speakerGPIOPortMap[2]}, {_speakerGPIOPortMap[3]}");
 
-            Console.CancelKeyPress += (object sender, ConsoleCancelEventArgs eventArgs) =>
-            {
+        //    Console.CancelKeyPress += (object sender, ConsoleCancelEventArgs eventArgs) =>
+        //    {
 
-            };
+        //    };
 
-            while (true)
-            {
-                while (tone != null)
-                {
-                    while (paused)
-                        Thread.Sleep(1000);
+        //    while (true)
+        //    {
+        //        while (tone != null)
+        //        {
+        //            while (paused)
+        //                Thread.Sleep(1000);
 
-                    Console.WriteLine($"Playing tone for {tone.delay} for ms on speaker with id {tone.speakerIdToPlayOn}");
-                    Thread.Sleep(tone.delay);
-                    tone = tone.nextTone;
-                    if (tone == null)
-                        tone = s.firstTone;
-                }
-            }
+        //            Console.WriteLine($"Playing tone for {tone.delay} for ms on speaker with id {tone.speakerIdToPlayOn}");
+        //            Thread.Sleep(tone.delay);
+        //            tone = tone.nextTone;
+        //            if (tone == null)
+        //                tone = s.firstTone;
+        //        }
+        //    }
 
-        }
+        //}
 
 
         public virtual void Subscribe(IObservable<MqttApplicationMessage> mqttApplicationMessage)
