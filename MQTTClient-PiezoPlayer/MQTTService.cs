@@ -65,7 +65,7 @@ namespace MQTTClient
             var configuration = new MqttConfiguration()
             {
                 Port = port,
-                KeepAliveSecs = 10,
+                KeepAliveSecs = 60,
                 WaitTimeoutSecs = 5,
                 BufferSize = 128 * 1024,
                 AllowWildcardsInTopicFilters = true,

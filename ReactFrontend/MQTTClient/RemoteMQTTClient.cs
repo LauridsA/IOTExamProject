@@ -20,7 +20,7 @@ namespace ReactFrontend.MQTTClient
             var configuration = new MqttConfiguration()
             {
                 Port = 12393,
-                KeepAliveSecs = 10,
+                KeepAliveSecs = 60,
                 WaitTimeoutSecs = 5,
                 BufferSize = 128 * 1024,
                 AllowWildcardsInTopicFilters = true,
