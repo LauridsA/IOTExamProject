@@ -23,7 +23,6 @@ namespace PiezoPlayer
             Console.WriteLine("Im running");
             pp.SetupPlayer().Wait();
             pp.Play().Wait();
-            while (true) ;
         }
     }
 }

@@ -55,38 +55,73 @@ namespace PiezoPlayer
                 );
             // (Song song, Tone nextTone, Tone previousTone, Tone firstTone, Tone lastTone, int speakerIdToPlayOn, int delay)
 
-            using (GpioController controller = new GpioController())
+            bool gpio = true;
+
+            if (gpio)
             {
-                controller.OpenPin(_speakerGPIOPortMap[1], PinMode.Output);
-                controller.OpenPin(_speakerGPIOPortMap[2], PinMode.Output);
-                controller.OpenPin(_speakerGPIOPortMap[3], PinMode.Output);
+                using (GpioController controller = new GpioController())
+                {
+                    controller.OpenPin(_speakerGPIOPortMap[1], PinMode.Output);
+                    controller.OpenPin(_speakerGPIOPortMap[2], PinMode.Output);
+                    controller.OpenPin(_speakerGPIOPortMap[3], PinMode.Output);
+                    Console.WriteLine($"GPIO pins enabled for use: {_speakerGPIOPortMap[1]}, {_speakerGPIOPortMap[2]}, {_speakerGPIOPortMap[3]}");
+
+                    Console.CancelKeyPress += (object sender, ConsoleCancelEventArgs eventArgs) =>
+                    {
+                        controller.Dispose();
+                    };
+
+                    while (true)
+                        while (playing)
+                        {
+                            foreach (var tone in s.tones)
+                            {
+                                if (!playing)
+                                {
+                                    controller.Write(_speakerGPIOPortMap[tone.speakerIdToPlayOn], PinValue.Low);
+                                    break;
+                                }
+                                while (paused)
+                                    Thread.Sleep(1000);
+
+                                Console.WriteLine($"Playing delaying tone for {tone.delayBeforePlaying} before playing tone for {tone.duration} ms on speaker with id {tone.speakerIdToPlayOn}");
+                                Thread.Sleep(tone.delayBeforePlaying);
+                                controller.Write(_speakerGPIOPortMap[tone.speakerIdToPlayOn], PinValue.High);
+                                Thread.Sleep(tone.duration);
+                                controller.Write(_speakerGPIOPortMap[tone.speakerIdToPlayOn], PinValue.Low);
+                            }
+
+                        }
+                }
+            }
+            else
+            {
                 Console.WriteLine($"GPIO pins enabled for use: {_speakerGPIOPortMap[1]}, {_speakerGPIOPortMap[2]}, {_speakerGPIOPortMap[3]}");
 
                 Console.CancelKeyPress += (object sender, ConsoleCancelEventArgs eventArgs) =>
                 {
-                    controller.Dispose();
+                    Console.WriteLine("keypresscancelled");
                 };
-
-                while (playing)
-                {
-                    foreach (var tone in s.tones)
+                while (true)
+                    while (playing)
                     {
-                        if (!playing)
+                        foreach (var tone in s.tones)
                         {
-                            controller.Write(_speakerGPIOPortMap[tone.speakerIdToPlayOn], PinValue.Low);
-                            break;
+                            if (!playing)
+                            {
+                                Console.Write($"{_speakerGPIOPortMap[tone.speakerIdToPlayOn]} low");
+                                break;
+                            }
+                            while (paused)
+                                Thread.Sleep(1000);
+
+                            Console.WriteLine($"Playing delaying tone for {tone.delayBeforePlaying} before playing tone for {tone.duration} ms on speaker with id {tone.speakerIdToPlayOn}");
+                            Thread.Sleep(tone.delayBeforePlaying);
+                            Console.WriteLine($"{_speakerGPIOPortMap[tone.speakerIdToPlayOn]} high");
+                            Thread.Sleep(tone.duration);
+                            Console.WriteLine($"{_speakerGPIOPortMap[tone.speakerIdToPlayOn]} low");
                         }
-                        while (paused)
-                            Thread.Sleep(1000);
-
-                        Console.WriteLine($"Playing delaying tone for {tone.delayBeforePlaying} before playing tone for {tone.duration} ms on speaker with id {tone.speakerIdToPlayOn}");
-                        Thread.Sleep(tone.delayBeforePlaying);
-                        controller.Write(_speakerGPIOPortMap[tone.speakerIdToPlayOn], PinValue.High);
-                        Thread.Sleep(tone.duration);
-                        controller.Write(_speakerGPIOPortMap[tone.speakerIdToPlayOn], PinValue.Low);
                     }
-
-                }
             }
         }
 
