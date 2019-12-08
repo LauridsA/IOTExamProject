@@ -17,57 +17,57 @@ namespace ReactFrontend.DataLayer
                     nodes = new List<Tone>()
                     {
                         //speaker, frequency, duration(ms)
-                        new Tone(1, 5, 500),
-                        new Tone(1, 5, 500),
-                        new Tone(1, 5, 500),
-                        new Tone(1, 5, 350),
-                        new Tone(1, 5, 150),
-                        new Tone(1, 5, 500),
-                        new Tone(1, 5, 350),
-                        new Tone(1, 5, 150),
-                        new Tone(1, 5, 650),
+                        new Tone(1, 440, 500),
+                        new Tone(1, 440, 500),
+                        new Tone(1, 440, 500),
+                        new Tone(1, 440, 350),
+                        new Tone(1, 440, 150),
+                        new Tone(1, 440, 500),
+                        new Tone(1, 440, 350),
+                        new Tone(1, 440, 150),
+                        new Tone(1, 440, 650),
                         //small wait, no tone
                         new Tone(1, 0, 150),
                         //next block
-                        new Tone(1, 5, 500),
-                        new Tone(1, 5, 500),
-                        new Tone(1, 5, 500),
-                        new Tone(1, 5, 350),
-                        new Tone(1, 5, 150),
-                        new Tone(1, 5, 350),
+                        new Tone(1, 440, 500),
+                        new Tone(1, 440, 500),
+                        new Tone(1, 440, 500),
+                        new Tone(1, 440, 350),
+                        new Tone(1, 440, 150),
+                        new Tone(1, 440, 350),
                         //next small wait, no tone
                         new Tone(1, 0, 250),
                         //next block
-                        new Tone(1, 5, 500),
-                        new Tone(1, 5, 300),
-                        new Tone(1, 5, 150),
-                        new Tone(1, 5, 400),
-                        new Tone(1, 5, 200),
-                        new Tone(1, 5, 200),
-                        new Tone(1, 5, 125),
-                        new Tone(1, 5, 125),
-                        new Tone(1, 5, 250),
+                        new Tone(1, 440, 500),
+                        new Tone(1, 440, 300),
+                        new Tone(1, 440, 150),
+                        new Tone(1, 440, 400),
+                        new Tone(1, 440, 200),
+                        new Tone(1, 440, 200),
+                        new Tone(1, 440, 125),
+                        new Tone(1, 440, 125),
+                        new Tone(1, 440, 250),
                         //next small wait, no tone
                         new Tone(1, 0, 250),
                         //next block
-                        new Tone(1, 5, 250),
-                        new Tone(1, 5, 400),
-                        new Tone(1, 5, 200),
-                        new Tone(1, 5, 200),
-                        new Tone(1, 5, 125),
-                        new Tone(1, 5, 125),
-                        new Tone(1, 5, 250),
+                        new Tone(1, 440, 250),
+                        new Tone(1, 440, 400),
+                        new Tone(1, 440, 200),
+                        new Tone(1, 440, 200),
+                        new Tone(1, 440, 125),
+                        new Tone(1, 440, 125),
+                        new Tone(1, 440, 250),
                         //next small wait, no tone
                         new Tone(1, 0, 250),
                         //last block
-                        new Tone(1, 5, 125),
-                        new Tone(1, 5, 500),
-                        new Tone(1, 5, 375),
-                        new Tone(1, 5, 125),
-                        new Tone(1, 5, 500),
-                        new Tone(1, 5, 375),
-                        new Tone(1, 5, 125),
-                        new Tone(1, 5, 650)
+                        new Tone(1, 440, 125),
+                        new Tone(1, 440, 500),
+                        new Tone(1, 440, 375),
+                        new Tone(1, 440, 125),
+                        new Tone(1, 440, 500),
+                        new Tone(1, 440, 375),
+                        new Tone(1, 440, 125),
+                        new Tone(1, 440, 650)
                     }
                 }
             },
@@ -78,17 +78,17 @@ namespace ReactFrontend.DataLayer
                     nodes = new List<Tone>()
                     {
                         //speaker, frequency, duration, delaybeforeplaying
-                        new Tone(1, 5, 1),
-                        new Tone(1, 5, 1),
-                        new Tone(1, 5, 1),
-                        new Tone(1, 5, 1),
-                        new Tone(1, 5, 1),
-                        new Tone(1, 5, 1),
-                        new Tone(1, 5, 1),
-                        new Tone(1, 5, 1),
-                        new Tone(1, 5, 1),
-                        new Tone(1, 5, 1),
-                        new Tone(1, 5, 1)
+                        new Tone(1, 440, 1),
+                        new Tone(1, 440, 1),
+                        new Tone(1, 440, 1),
+                        new Tone(1, 440, 1),
+                        new Tone(1, 440, 1),
+                        new Tone(1, 440, 1),
+                        new Tone(1, 440, 1),
+                        new Tone(1, 440, 1),
+                        new Tone(1, 440, 1),
+                        new Tone(1, 440, 1),
+                        new Tone(1, 440, 1)
                     }
                 }
             },
@@ -99,17 +99,17 @@ namespace ReactFrontend.DataLayer
                     nodes = new List<Tone>()
                     {
                         //speaker, frequency, duration, delaybeforeplaying
-                        new Tone(1, 5, 1),
-                        new Tone(1, 5, 1),
-                        new Tone(1, 5, 1),
-                        new Tone(1, 5, 1),
-                        new Tone(1, 5, 1),
-                        new Tone(1, 5, 1),
-                        new Tone(1, 5, 1),
-                        new Tone(1, 5, 1),
-                        new Tone(1, 5, 1),
-                        new Tone(1, 5, 1),
-                        new Tone(1, 5, 1)
+                        new Tone(1, 440, 1),
+                        new Tone(1, 440, 1),
+                        new Tone(1, 440, 1),
+                        new Tone(1, 440, 1),
+                        new Tone(1, 440, 1),
+                        new Tone(1, 440, 1),
+                        new Tone(1, 440, 1),
+                        new Tone(1, 440, 1),
+                        new Tone(1, 440, 1),
+                        new Tone(1, 440, 1),
+                        new Tone(1, 440, 1)
                     }
                 }
             },
