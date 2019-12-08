@@ -21,6 +21,11 @@ namespace PiezoPlayer
             var request = new RestRequest($"/api/piezo/GetSongByTitle/{songTitle}");
             var res = client.Execute(request);
             var content = JsonConvert.DeserializeObject<Song>(res.Content);
+
+            if (content != null)
+                Console.WriteLine("SONGAPI: gotten by title " + content.title);
+                        else
+                Console.WriteLine("SONGAPI: SONG WAS NULL");
             return content;
         }
 
@@ -29,7 +34,12 @@ namespace PiezoPlayer
             var request = new RestRequest($"/api/piezo/GetNextSong/{currentId}");
             var res = client.Execute(request);
             var content = JsonConvert.DeserializeObject<Song>(res.Content);
-            return content; 
+
+            if (content != null)
+                Console.WriteLine("SONGAPI: gotten next " + content.title);
+            else
+                Console.WriteLine("SONGAPI: SONG WAS NULL");
+            return content;
         }
 
 
@@ -38,6 +48,11 @@ namespace PiezoPlayer
             var request = new RestRequest($"/api/piezo/GetPrevSong/{currentId}");
             var res = client.Execute(request);
             var content = JsonConvert.DeserializeObject<Song>(res.Content);
+
+            if (content != null)
+                Console.WriteLine("SONGAPI: gotten previous " + content.title);
+                        else
+                Console.WriteLine("SONGAPI: SONG WAS NULL");
             return content;
         }
     }
