@@ -202,7 +202,7 @@ namespace PiezoPlayer
             var topic = value.Topic.ToLower();
             var payload = Encoding.UTF8.GetString(value.Payload).ToLower();
             Console.WriteLine($"Topic: {value.Topic}. {Environment.NewLine}Message: {payload}");
-            if (topic == "song/track")
+            if (topic == "track")
             {
                 if (payload == "next")
                 {
@@ -269,9 +269,9 @@ namespace PiezoPlayer
                 while (true)
                 {
                     controller.Write(17, PinValue.High);
-                    Thread.Sleep(v);
+                    Thread.Sleep(new TimeSpan(v));
                     controller.Write(17, PinValue.Low);
-                    Thread.Sleep(v);
+                    Thread.Sleep(new TimeSpan(v));
                 }
             }
         }
