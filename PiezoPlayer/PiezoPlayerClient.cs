@@ -33,6 +33,7 @@ namespace PiezoPlayer
             await client.Subscribe("test/#"); //REMOVE FOR PROD
             Subscribe(client.GetMessageStream());
             PopulateSpeakerGPIOPorts();
+            s = sClient.GetNextSong(100);
         }
 
         private void PopulateSpeakerGPIOPorts()
@@ -316,12 +317,11 @@ namespace PiezoPlayer
 
             youarebeingwatched.Start();
             Console.WriteLine($"Playing delaying tone forbefore playing tone for {t.duration} ms. Will sleep for {t.frequency} ms. after {sleeptimeafter.TotalMilliseconds} sleep ms");
-            while (youarebeingwatched.ElapsedMilliseconds < t.duration)
-            {
-                Console.WriteLine("beep");
-                Thread.Sleep(t.frequency);
-                Console.WriteLine("stopbeep");
-            }
+            if (t.frequency > 0)
+                while (youarebeingwatched.ElapsedMilliseconds < t.duration)
+                {
+                    Thread.Sleep(t.frequency);
+                }
             Thread.Sleep(sleeptimeafter);
         }
 
