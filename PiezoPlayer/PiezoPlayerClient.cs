@@ -46,7 +46,7 @@ namespace PiezoPlayer
         {
             // (Song song, Tone nextTone, Tone previousTone, Tone firstTone, Tone lastTone, int speakerIdToPlayOn, int delay)
 
-            bool gpio = false;
+            bool gpio = true;
 
             if (gpio)
             {
