@@ -9,6 +9,7 @@ namespace ReactFrontend.Models
     {
         public List<Tone> nodes;
         public string title;
+        public int id;
         public Song ()
         {
             //empty lol

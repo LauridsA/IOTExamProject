@@ -53,7 +53,15 @@ namespace ReactFrontend.Controllers
         public ActionResult<Song> getNextSong([FromRoute]int key)
         {
             AlbumService service = new AlbumService();
-            return service.getSong(key);
+            return service.getNextSong(key);
+        }
+
+        [HttpGet]
+        [Route("GetPrevSong/{key}")]
+        public ActionResult<Song> getPrevSong([FromRoute]int key)
+        {
+            AlbumService service = new AlbumService();
+            return service.getPrevSong(key);
         }
 
         [HttpGet]

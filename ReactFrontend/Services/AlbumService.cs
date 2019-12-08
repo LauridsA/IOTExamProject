@@ -14,14 +14,34 @@ namespace ReactFrontend.Services
             //empty lul
         }
 
+        public Song getPrevSong(int key)
+        {
+            var songs = AlbumDB.GetSongs();
+            if (key - 1 < 1)
+            {
+                return songs[songs.Count];
+            }
+            return songs[key-1];
+        }
+
         public Song getSong(int key)
         {
             var songs = AlbumDB.GetSongs();
-            if (key+1 > songs.Count)
+            if (key+1 > songs.Count || key-1 < 1)
             {
                 return songs[1];
             }
             return songs[key];
+        }
+
+        public Song getNextSong(int key)
+        {
+            var songs = AlbumDB.GetSongs();
+            if (key + 1 > songs.Count)
+            {
+                return songs[1];
+            }
+            return songs[key+1];
         }
 
         public Song getSongFromTitle(string title)

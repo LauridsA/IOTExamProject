@@ -14,6 +14,7 @@ namespace ReactFrontend.DataLayer
                 1, new Song()
                 {
                     title = "The Imperial March",
+                    id = 1,
                     nodes = new List<Tone>()
                     {
                         //speaker, frequency, duration(ms)
@@ -75,6 +76,7 @@ namespace ReactFrontend.DataLayer
                 2, new Song()
                 {
                     title = "My Other Song",
+                    id = 2,
                     nodes = new List<Tone>()
                     {
                         //speaker, frequency, duration, delaybeforeplaying
@@ -96,6 +98,7 @@ namespace ReactFrontend.DataLayer
                 3, new Song()
                 {
                     title = "Go Suck A D",
+                    id = 3,
                     nodes = new List<Tone>()
                     {
                         //speaker, frequency, duration, delaybeforeplaying
