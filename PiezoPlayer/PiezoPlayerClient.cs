@@ -242,7 +242,7 @@ namespace PiezoPlayer
             {
                 if (payload == "start")
                 {
-                    Flicker();
+                    Task.Run(() => Flicker());
                 }
                 else
                 {
