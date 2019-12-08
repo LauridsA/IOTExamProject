@@ -298,14 +298,17 @@ namespace PiezoPlayer
             var sleeptimeafter = TimeSpan.FromMilliseconds(t.duration * 0.3);
 
             youarebeingwatched.Start();
-            Console.WriteLine($"Playing delaying tone forbefore playing tone for {t.duration} ms. Will sleep for {t.frequency} ms. after {sleeptimeafter.TotalMilliseconds} sleep ms");
             if (t.frequency > 0)
+            {
+                Console.WriteLine($"Playing delaying tone forbefore playing tone for {t.duration} ms. Will sleep for {t.frequency} ms. after {sleeptimeafter.TotalMilliseconds} sleep ms");
                 while (youarebeingwatched.ElapsedMilliseconds < t.duration)
                 {
                     controller.Write(17, PinValue.High);
                     Thread.Sleep(t.frequency);
                     controller.Write(17, PinValue.Low);
                 }
+            }
+
             controller.Write(17, PinValue.Low);
             Thread.Sleep(sleeptimeafter);
         }
