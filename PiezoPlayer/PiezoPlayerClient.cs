@@ -26,13 +26,14 @@ namespace PiezoPlayer
         public async Task SetupPlayer()
         {
             client = new MQTTService();
-            sClient = new SongClient("https://iot.busk.cf");
+            sClient = new SongClient("https://iot2.busk.cf");
             await client.SetupClient(12393, "broker.busk.cf", "piezo", "piezopass", "PiezoPlayer");
             await client.Subscribe("Song/#");
             await client.Subscribe("Track/#");
             await client.Subscribe("test/#"); //REMOVE FOR PROD
             Subscribe(client.GetMessageStream());
             PopulateSpeakerGPIOPorts();
+            s = sClient.GetNextSong(100);
         }
 
         private void PopulateSpeakerGPIOPorts()
@@ -46,7 +47,7 @@ namespace PiezoPlayer
         {
             // (Song song, Tone nextTone, Tone previousTone, Tone firstTone, Tone lastTone, int speakerIdToPlayOn, int delay)
 
-            bool gpio = false;
+            bool gpio = true;
 
             if (gpio)
             {
@@ -223,6 +224,7 @@ namespace PiezoPlayer
                     Thread.Sleep(1000);
                     s = sClient.GetSongByTitle(payload);
                 }
+                client.Publish("status", "PiezoPlayer loaded song " + s.title);
 
                 // Get value.payload from backend (songname)
             }
@@ -231,23 +233,23 @@ namespace PiezoPlayer
                 if (payload == "play")
                 {
                     playing = true;
-                    client.Publish("status", "Playing");
+                    client.Publish("status", "PiezoPlayer Playing " + s.title);
                 }
                 else if (payload == "stop")
                 {
                     playing = false;
-                    client.Publish("status", "Stopped");
+                    client.Publish("status", $"PiezoPlayer Stopped");
                 }
                 else if (payload == "pause")
                 {
                     paused = true;
-                    client.Publish("status", "Paused");
+                    client.Publish("status", "PiezoPlayer Paused");
 
                 }
                 else if (payload == "unpause")
                 {
                     paused = false;
-                    client.Publish("status", "Unpaused");
+                    client.Publish("status", "PiezoPlayer Unpaused");
                 }
             }
             if (topic == "test/flicker")
@@ -297,14 +299,17 @@ namespace PiezoPlayer
             var sleeptimeafter = TimeSpan.FromMilliseconds(t.duration * 0.3);
 
             youarebeingwatched.Start();
-            Console.WriteLine($"Playing delaying tone forbefore playing tone for {t.duration} ms. Will sleep for {t.frequency} ms. after {sleeptimeafter.TotalMilliseconds} sleep ms");
             if (t.frequency > 0)
+            {
+                Console.WriteLine($"Playing delaying tone forbefore playing tone for {t.duration} ms. Will sleep for {t.frequency} ms. after {sleeptimeafter.TotalMilliseconds} sleep ms");
                 while (youarebeingwatched.ElapsedMilliseconds < t.duration)
                 {
                     controller.Write(17, PinValue.High);
                     Thread.Sleep(t.frequency);
                     controller.Write(17, PinValue.Low);
                 }
+            }
+
             controller.Write(17, PinValue.Low);
             Thread.Sleep(sleeptimeafter);
         }
@@ -316,12 +321,11 @@ namespace PiezoPlayer
 
             youarebeingwatched.Start();
             Console.WriteLine($"Playing delaying tone forbefore playing tone for {t.duration} ms. Will sleep for {t.frequency} ms. after {sleeptimeafter.TotalMilliseconds} sleep ms");
-            while (youarebeingwatched.ElapsedMilliseconds < t.duration)
-            {
-                Console.WriteLine("beep");
-                Thread.Sleep(t.frequency);
-                Console.WriteLine("stopbeep");
-            }
+            if (t.frequency > 0)
+                while (youarebeingwatched.ElapsedMilliseconds < t.duration)
+                {
+                    Thread.Sleep(t.frequency);
+                }
             Thread.Sleep(sleeptimeafter);
         }
 
