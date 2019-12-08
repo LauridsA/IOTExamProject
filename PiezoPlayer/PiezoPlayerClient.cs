@@ -224,6 +224,7 @@ namespace PiezoPlayer
                     Thread.Sleep(1000);
                     s = sClient.GetSongByTitle(payload);
                 }
+                client.Publish("status", "PiezoPlayer loaded song " + s.title);
 
                 // Get value.payload from backend (songname)
             }
@@ -232,23 +233,23 @@ namespace PiezoPlayer
                 if (payload == "play")
                 {
                     playing = true;
-                    client.Publish("status", "Playing");
+                    client.Publish("status", "PiezoPlayer Playing " + s.title);
                 }
                 else if (payload == "stop")
                 {
                     playing = false;
-                    client.Publish("status", "Stopped");
+                    client.Publish("status", $"PiezoPlayer Stopped");
                 }
                 else if (payload == "pause")
                 {
                     paused = true;
-                    client.Publish("status", "Paused");
+                    client.Publish("status", "PiezoPlayer Paused");
 
                 }
                 else if (payload == "unpause")
                 {
                     paused = false;
-                    client.Publish("status", "Unpaused");
+                    client.Publish("status", "PiezoPlayer Unpaused");
                 }
             }
             if (topic == "test/flicker")
