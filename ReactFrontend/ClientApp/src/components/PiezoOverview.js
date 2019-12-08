@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
-
 export class PiezoOverview extends Component {
     static displayName = PiezoOverview.name;
 
     constructor(props) {
         super(props);
-        this.state = { messages: [], topics: [] };
+        this.state = { consoleData: [] };
         this.getMessages = this.getMessages.bind(this);
         this.postMessageSong = this.postMessageSong.bind(this);
         this.postMessageTrack = this.postMessageTrack.bind(this);
-        this.postTest = this.postTest.bind(this);
     }
 
     postMessageSong(e) {
@@ -30,64 +28,56 @@ export class PiezoOverview extends Component {
         })
     }
 
-    postTest(e) {
-        if (this.inputH.value == "") {
-            this.inputH.value = "[Empty]"
-        }
-        fetch('api/piezo/postMqttMessage/test/flicker/' + this.inputH.value, {
-            method: 'POST'
-        })
-    }
-
     getMessages() {
         fetch('api/piezo/GetMessageReactClient', {
             method: 'GET'
         })
             .then(response => {
-                //callback
                 response.json().then(data => {
-                    var datalistT = [];
-                    var datalistM = [];
-                    //we implement the logic here.
+                    let datalist = [];
                     data.forEach(entry => {
-                        datalistM = datalistM.concat(entry['message'])
-                        datalistT = datalistT.concat(entry['topic'])
+                        let temp = {
+                            message: entry['message'],
+                            topic: entry['topic']
+                        }
+                        datalist = datalist.concat(temp)
                     })
+                    console.log(datalist)
                     this.setState({
-                        messages: datalistM,
-                        topics: datalistT
+                        consoleData: datalist
                     });
-                    console.log(this.state.messages)
-                    console.log(this.state.topics)
                 })
             })
     }
 
     render() {
         return (
-            <div>
-                <h1>Messages</h1>
-
-                <button className="btn btn-primary" onClick={this.getMessages}>Get the messages</button>
-                <div>
-                    <p> Messages: </p>
-                    <ul>
-                        {this.state.messages.map(item => {
-                            return <li style={{ listStyleType: "none", fontWeight: "bold", fontSize: "17px" }} key={item}> Message: {item}</li>
-                        })}
-                        {this.state.topics.map(item => {
-                            return <li style={{ listStyleType: "none", fontSize: "12px", color: "#999" }} key={item}>With Topic: {item}</li>
-                        })}
-                    </ul>
+            <div className='container'>
+                <div className='row'>
+                <div className='col-sm' >
+                    <h1>Messages</h1>
+                    <button className="btn btn-primary" onClick={this.getMessages}>Get the messages</button> <br />
+                    <p>
+                        <ul>
+                            {
+                                this.state.consoleData.map(item => <li style={{ listStyleType: "none", fontWeight: "bold", fontSize: "17px" }} key={item.topic}> {item.topic}: {item.message}</li>)
+                            }
+                        </ul>
+                    </p>
+                
                 </div>
-                <div>Player</div>
-                <textarea type="text" placeholder="Play/Stop/Pause/Unpause" ref={(input) => this.inputS = input} /><br />
-                <button className="btn btn-primary" onClick={this.postMessageSong}>player</button> <br />
-                <div>Track</div> <br />
-                <textarea type="text" placeholder="Next/Prev" ref={(input) => this.inputT = input} /> <br />
-                <button className="btn btn-primary" onClick={this.postMessageTrack}>song</button> <br />
-                <textarea type="text" placeholder="start / int speed" ref={(input) => this.inputH = input} /> <br />
-                <button className="btn btn-primary" onClick={this.postTest}>test</button> <br />
+                <div className='col-sm'>
+                    <h1>Player</h1>
+                    <textarea type="text" placeholder="Play/Stop/Pause/Unpause" ref={(input) => this.inputS = input} /><br />
+                    <button className="btn btn-primary" onClick={this.postMessageSong}>player</button> <br />
+                </div>
+                    <div className='col-sm'>
+                        <h1>Track</h1>
+                        <textarea type="text" placeholder="Next/Prev" ref={(input) => this.inputT = input} /> <br />
+                        <button className="btn btn-primary" onClick={this.postMessageTrack}>song</button> <br />
+
+                    </div>
+                </div>
             </div>
         );
     }
