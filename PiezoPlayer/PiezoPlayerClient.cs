@@ -44,15 +44,15 @@ namespace PiezoPlayer
                 (
                     new List<Tone>()
                     { //speaker id, frequency in hz, duration, delay before playing
-                        new Tone(1, 440, 500, 0),
-                        new Tone(1, 440, 500, 20),
-                        new Tone(1, 440, 500, 20),
-                        new Tone(1, 349, 600, 20),
-                        new Tone(1, 523, 150, 20),
-                        new Tone(1, 440, 500, 20),
-                        new Tone(1, 349, 350, 20),
-                        new Tone(1, 523, 150, 20),
-                        new Tone(1, 440, 650, 20)
+                        new Tone(1, 600, 500, 0),
+                        new Tone(1, 600, 500, 20),
+                        new Tone(1, 600, 500, 20),
+                        new Tone(1, 250, 600, 20),
+                        new Tone(1, 300, 150, 20),
+                        new Tone(1, 600, 500, 20),
+                        new Tone(1, 250, 350, 20),
+                        new Tone(1, 300, 150, 20),
+                        new Tone(1, 600, 650, 20)
                     }
                 );
             // (Song song, Tone nextTone, Tone previousTone, Tone firstTone, Tone lastTone, int speakerIdToPlayOn, int delay)
