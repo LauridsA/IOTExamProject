@@ -7,13 +7,11 @@ namespace ReactFrontend.Models
 {
     public class Tone
     {
-        public int speakerIdToPlayOn;
         public int frequency;
         public int duration;
 
-        public Tone(int speaker, int frequency, int dur)
+        public Tone(int frequency, int dur)
         {
-            this.speakerIdToPlayOn = speaker;
             this.frequency = frequency;
             this.duration = dur;
         }

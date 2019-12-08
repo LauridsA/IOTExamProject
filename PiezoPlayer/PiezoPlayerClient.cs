@@ -29,6 +29,7 @@ namespace PiezoPlayer
             sClient = new SongClient("localhost:44316");
             await client.SetupClient(12393, "broker.busk.cf", "piezo", "piezopass", "PiezoPlayer");
             await client.Subscribe("Song/#");
+            await client.Subscribe("Track/#");
             await client.Subscribe("test/#"); //REMOVE FOR PROD
             Subscribe(client.GetMessageStream());
             PopulateSpeakerGPIOPorts();
