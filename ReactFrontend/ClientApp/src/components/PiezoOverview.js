@@ -8,6 +8,9 @@ export class PiezoOverview extends Component {
         this.getMessages = this.getMessages.bind(this);
         this.postMessageSong = this.postMessageSong.bind(this);
         this.postMessageTrack = this.postMessageTrack.bind(this);
+        window.setInterval(
+            this.getMessages
+          , 1000);
     }
 
     postMessageSong(e) {
@@ -42,7 +45,6 @@ export class PiezoOverview extends Component {
                         }
                         datalist = datalist.concat(temp)
                     })
-                    console.log(datalist)
                     this.setState({
                         consoleData: datalist
                     });
@@ -56,25 +58,25 @@ export class PiezoOverview extends Component {
                 <div className='row'>
                 <div className='col-sm' >
                     <h1>Messages</h1>
-                    <button className="btn btn-primary" onClick={this.getMessages}>Get the messages</button> <br />
-                    <p>
+                    {/* <button className="btn btn-primary" onClick={this.getMessages}>Get the messages</button> <br /> */}
+                    <div>
                         <ul>
                             {
                                 this.state.consoleData.map(item => <li style={{ listStyleType: "none", fontWeight: "bold", fontSize: "17px" }} key={item.topic}> {item.topic}: {item.message}</li>)
                             }
                         </ul>
-                    </p>
+                    </div>
                 
                 </div>
                 <div className='col-sm'>
                     <h1>Player</h1>
                     <textarea type="text" placeholder="Play/Stop/Pause/Unpause" ref={(input) => this.inputS = input} /><br />
-                    <button className="btn btn-primary" onClick={this.postMessageSong}>player</button> <br />
+                    <button className="btn btn-primary" onClick={this.postMessageSong}>send</button> <br />
                 </div>
                     <div className='col-sm'>
                         <h1>Track</h1>
                         <textarea type="text" placeholder="Next/Prev" ref={(input) => this.inputT = input} /> <br />
-                        <button className="btn btn-primary" onClick={this.postMessageTrack}>song</button> <br />
+                        <button className="btn btn-primary" onClick={this.postMessageTrack}>send</button> <br />
 
                     </div>
                 </div>
