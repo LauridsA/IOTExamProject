@@ -1,4 +1,5 @@
-﻿using PiezoPlayer.Models;
+﻿using Newtonsoft.Json;
+using PiezoPlayer.Models;
 using RestSharp;
 using System;
 using System.Collections.Generic;
@@ -18,20 +19,26 @@ namespace PiezoPlayer
         public Song GetSongByTitle(string songTitle)
         {
             var request = new RestRequest($"/api/piezo/GetSongByTitle /{songTitle}");
-            return client.Execute<Song>(request).Data;
+            var res = client.Execute(request);
+            var content = JsonConvert.DeserializeObject<Song>(res.Content);
+            return content;
         }
 
         public Song GetNextSong(int currentId)
         {
             var request = new RestRequest($"/api/piezo/GetNextSong/{currentId}");
-            return client.Execute<Song>(request).Data;
+            var res = client.Execute(request);
+            var content = JsonConvert.DeserializeObject<Song>(res.Content);
+            return content; 
         }
 
 
         public Song GetPreviousSong(int currentId)
         {
             var request = new RestRequest($"/api/piezo/GetPrevSong/{currentId}");
-            return client.Execute<Song>(request).Data;
+            var res = client.Execute(request);
+            var content = JsonConvert.DeserializeObject<Song>(res.Content);
+            return content;
         }
     }
 }
