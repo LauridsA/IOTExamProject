@@ -282,7 +282,6 @@ namespace PiezoPlayer
 
         private void PlayTone(GpioController controller, Tone t)
         {
-            Thread.Sleep(new TimeSpan(t.delayBeforePlaying));
             Stopwatch faggot = new Stopwatch();
             TimeSpan ts = TimeSpan.FromMilliseconds(t.duration);
 
@@ -294,11 +293,11 @@ namespace PiezoPlayer
                 Thread.Sleep(HzToTimespan(t.frequency));
                 controller.Write(17, PinValue.Low);
             }
+            Thread.Sleep(TimeSpan.FromMilliseconds(t.duration / 0.3));
         }
 
         private void PlayToneLocal(Tone t)
         {
-            Thread.Sleep(new TimeSpan(t.delayBeforePlaying));
             Stopwatch faggot = new Stopwatch();
             TimeSpan ts = TimeSpan.FromMilliseconds(t.duration);
 
@@ -309,6 +308,7 @@ namespace PiezoPlayer
                 Thread.Sleep(HzToTimespan(t.frequency));
                 Console.WriteLine("Beep");
             }
+            Thread.Sleep(TimeSpan.FromMilliseconds(t.duration / 0.3));
         }
 
     }
