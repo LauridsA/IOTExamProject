@@ -18,7 +18,7 @@ namespace PiezoPlayer
 
         public Song GetSongByTitle(string songTitle)
         {
-            var request = new RestRequest($"/api/piezo/GetSongByTitle /{songTitle}");
+            var request = new RestRequest($"/api/piezo/GetSongByTitle/{songTitle}");
             var res = client.Execute(request);
             var content = JsonConvert.DeserializeObject<Song>(res.Content);
             return content;
