@@ -4,6 +4,7 @@ using ReactFrontend.MQTTClient;
 using System;
 using System.Collections.Generic;
 using System.Device.Gpio;
+using System.Diagnostics;
 using System.Net.Mqtt;
 using System.Text;
 using System.Threading;
@@ -113,11 +114,8 @@ namespace PiezoPlayer
                             while (paused)
                                 Thread.Sleep(1000);
 
-                            Console.WriteLine($"Playing delaying tone for {tone.delayBeforePlaying} before playing tone for {tone.duration} ms on speaker with id {tone.speakerIdToPlayOn}");
-                            Thread.Sleep(tone.delayBeforePlaying);
-                            Console.WriteLine($"{_speakerGPIOPortMap[tone.speakerIdToPlayOn]} high");
-                            Thread.Sleep(tone.duration);
-                            Console.WriteLine($"{_speakerGPIOPortMap[tone.speakerIdToPlayOn]} low");
+                            PlayToneLocal(tone);
+
                         }
                     }
             }
@@ -279,21 +277,37 @@ namespace PiezoPlayer
 
         private TimeSpan HzToTimespan(int hz)
         {
-            return TimeSpan.FromMilliseconds((hz / 1000));
+            return TimeSpan.FromMilliseconds((1/hz)*1000);
         }
 
         private void PlayTone(GpioController controller, Tone t)
         {
             Thread.Sleep(new TimeSpan(t.delayBeforePlaying));
-            DateTime dt = DateTime.Now;
+            Stopwatch faggot = new Stopwatch();
             TimeSpan ts = TimeSpan.FromMilliseconds(t.duration);
 
-            while(dt.Ticks < ts.Ticks)
+            faggot.Start();
+
+            while (faggot.ElapsedMilliseconds < ts.Milliseconds)
             {
                 controller.Write(17, PinValue.High);
                 Thread.Sleep(HzToTimespan(t.frequency));
                 controller.Write(17, PinValue.Low);
-                dt = DateTime.Now;
+            }
+        }
+
+        private void PlayToneLocal(Tone t)
+        {
+            Thread.Sleep(new TimeSpan(t.delayBeforePlaying));
+            Stopwatch faggot = new Stopwatch();
+            TimeSpan ts = TimeSpan.FromMilliseconds(t.duration);
+
+            faggot.Start();
+            while (faggot.ElapsedMilliseconds < ts.Milliseconds)
+            {
+                Console.WriteLine("Beep");
+                Thread.Sleep(HzToTimespan(t.frequency));
+                Console.WriteLine("Beep");
             }
         }
 
