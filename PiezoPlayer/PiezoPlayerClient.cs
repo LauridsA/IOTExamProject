@@ -46,7 +46,7 @@ namespace PiezoPlayer
         {
             // (Song song, Tone nextTone, Tone previousTone, Tone firstTone, Tone lastTone, int speakerIdToPlayOn, int delay)
 
-            bool gpio = true;
+            bool gpio = false;
 
             if (gpio)
             {
@@ -107,7 +107,7 @@ namespace PiezoPlayer
                             while (paused)
                                 Thread.Sleep(1000);
 
-                            //PlayToneLocal(tone);
+                            PlayToneLocal(tone);
 
                         }
                     }
@@ -298,30 +298,32 @@ namespace PiezoPlayer
 
             youarebeingwatched.Start();
             Console.WriteLine($"Playing delaying tone forbefore playing tone for {t.duration} ms. Will sleep for {t.frequency} ms. after {sleeptimeafter.TotalMilliseconds} sleep ms");
-            while (youarebeingwatched.ElapsedMilliseconds < t.duration)
-            {
-                controller.Write(17, PinValue.High);
-                Thread.Sleep(t.frequency);
-                controller.Write(17, PinValue.Low);
-            }
+            if (t.frequency > 0)
+                while (youarebeingwatched.ElapsedMilliseconds < t.duration)
+                {
+                    controller.Write(17, PinValue.High);
+                    Thread.Sleep(t.frequency);
+                    controller.Write(17, PinValue.Low);
+                }
             controller.Write(17, PinValue.Low);
             Thread.Sleep(sleeptimeafter);
         }
 
-        //private void PlayToneLocal(Tone t)
-        //{
-        //    Stopwatch faggot = new Stopwatch();
-        //    TimeSpan ts = TimeSpan.FromMilliseconds(t.duration);
+        private void PlayToneLocal(Tone t)
+        {
+            Stopwatch youarebeingwatched = new Stopwatch();
+            var sleeptimeafter = TimeSpan.FromMilliseconds(t.duration * 0.3);
 
-        //    faggot.Start();
-        //    while (faggot.ElapsedMilliseconds < ts.Milliseconds)
-        //    {
-        //        Console.WriteLine("Beep");
-        //        Thread.Sleep(HzToTimespan(t.frequency));
-        //        Console.WriteLine("Beep");
-        //    }
-        //    Thread.Sleep(TimeSpan.FromMilliseconds(t.duration * 0.3));
-        //}
+            youarebeingwatched.Start();
+            Console.WriteLine($"Playing delaying tone forbefore playing tone for {t.duration} ms. Will sleep for {t.frequency} ms. after {sleeptimeafter.TotalMilliseconds} sleep ms");
+            while (youarebeingwatched.ElapsedMilliseconds < t.duration)
+            {
+                Console.WriteLine("beep");
+                Thread.Sleep(t.frequency);
+                Console.WriteLine("stopbeep");
+            }
+            Thread.Sleep(sleeptimeafter);
+        }
 
     }
 }
