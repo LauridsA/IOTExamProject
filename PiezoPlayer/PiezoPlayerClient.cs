@@ -283,17 +283,19 @@ namespace PiezoPlayer
         {
             Stopwatch faggot = new Stopwatch();
             TimeSpan ts = TimeSpan.FromMilliseconds(t.duration);
+            var sleeptime = HzToTimespan(t.frequency);
+            var sleeptimeafter = TimeSpan.FromMilliseconds(t.duration * 0.3);
 
             faggot.Start();
-            Console.WriteLine($"Playing delaying tone forbefore playing tone for {t.duration} ms on speaker with id {t.speakerIdToPlayOn}");
+            Console.WriteLine($"Playing delaying tone forbefore playing tone for {t.duration} ms on speaker with id {t.speakerIdToPlayOn}. Will sleep for {sleeptime} and after {sleeptimeafter}");
             while (faggot.ElapsedMilliseconds < ts.Milliseconds)
             {
                 controller.Write(17, PinValue.High);
-                Thread.Sleep(HzToTimespan(t.frequency));
+                Thread.Sleep(sleeptime);
                 controller.Write(17, PinValue.Low);
             }
             controller.Write(17, PinValue.Low);
-            Thread.Sleep(TimeSpan.FromMilliseconds(t.duration * 0.3));
+            Thread.Sleep(sleeptimeafter);
         }
 
         private void PlayToneLocal(Tone t)
