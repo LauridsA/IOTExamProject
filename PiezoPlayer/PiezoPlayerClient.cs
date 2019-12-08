@@ -26,7 +26,7 @@ namespace PiezoPlayer
         public async Task SetupPlayer()
         {
             client = new MQTTService();
-            sClient = new SongClient("localhost:44316");
+            sClient = new SongClient("172.26.124.13:44316");
             await client.SetupClient(12393, "broker.busk.cf", "piezo", "piezopass", "PiezoPlayer");
             await client.Subscribe("Song/#");
             await client.Subscribe("Track/#");
