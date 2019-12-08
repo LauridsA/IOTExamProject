@@ -15,7 +15,7 @@ namespace PiezoPlayer
     {
         static bool playing = false;
         static bool paused = false;
-        static int v = 5;
+        static long v = 5;
         Song s = null;
         static Dictionary<int, int> _speakerGPIOPortMap = new Dictionary<int, int>();
         private List<Message> messages { get; set; }
@@ -42,15 +42,16 @@ namespace PiezoPlayer
             s = new Song
                 (
                     new List<Tone>()
-                    {
-                        new Tone(1, 10000, 200, 0),
-                        new Tone(1, 5000, 1500, 200),
-                        new Tone(1, 11000, 1000, 800),
-                        new Tone(1, 2000, 600, 100),
-                        new Tone(1, 4000, 2500, 600),
-                        new Tone(1, 9000, 800, 600),
-                        new Tone(1, 1500, 1000, 1000),
-                        new Tone(1, 8000, 300, 100),
+                    { //speaker id, frequency in hz, duration, delay before playing
+                        new Tone(1, 440, 500, 0),
+                        new Tone(1, 440, 500, 20),
+                        new Tone(1, 440, 500, 20),
+                        new Tone(1, 349, 600, 20),
+                        new Tone(1, 523, 150, 20),
+                        new Tone(1, 440, 500, 20),
+                        new Tone(1, 349, 350, 20),
+                        new Tone(1, 523, 150, 20),
+                        new Tone(1, 440, 650, 20)
                     }
                 );
             // (Song song, Tone nextTone, Tone previousTone, Tone firstTone, Tone lastTone, int speakerIdToPlayOn, int delay)
@@ -85,10 +86,7 @@ namespace PiezoPlayer
                                     Thread.Sleep(1000);
 
                                 Console.WriteLine($"Playing delaying tone for {tone.delayBeforePlaying} before playing tone for {tone.duration} ms on speaker with id {tone.speakerIdToPlayOn}");
-                                Thread.Sleep(tone.delayBeforePlaying);
-                                controller.Write(_speakerGPIOPortMap[tone.speakerIdToPlayOn], PinValue.High);
-                                Thread.Sleep(tone.duration);
-                                controller.Write(_speakerGPIOPortMap[tone.speakerIdToPlayOn], PinValue.Low);
+                                PlayTone(controller, tone);
                             }
 
                         }
@@ -246,8 +244,11 @@ namespace PiezoPlayer
                 }
                 else
                 {
-                    Console.WriteLine("Flickering with a delay of " + payload + "ms between on and off");
-                    v = int.Parse(payload);
+                    if (long.TryParse(payload, out v))
+                        Console.WriteLine($"Flickering with a delay of {payload} hz - timespan {v} between on and off.");
+                    else
+                        Console.WriteLine($"Indvalid parse");
+
                 }
             }
         }
@@ -275,5 +276,26 @@ namespace PiezoPlayer
                 }
             }
         }
+
+        private TimeSpan HzToTimespan(int hz)
+        {
+            return TimeSpan.FromMilliseconds((hz / 1000));
+        }
+
+        private void PlayTone(GpioController controller, Tone t)
+        {
+            Thread.Sleep(new TimeSpan(t.delayBeforePlaying));
+            DateTime dt = DateTime.Now;
+            TimeSpan ts = TimeSpan.FromMilliseconds(t.duration);
+
+            while(dt.Ticks < ts.Ticks)
+            {
+                controller.Write(17, PinValue.High);
+                Thread.Sleep(HzToTimespan(t.frequency));
+                controller.Write(17, PinValue.Low);
+                dt = DateTime.Now;
+            }
+        }
+
     }
 }
