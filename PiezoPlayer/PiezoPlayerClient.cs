@@ -67,9 +67,9 @@ namespace PiezoPlayer
                     controller.OpenPin(_speakerGPIOPortMap[2], PinMode.Output);
                     controller.OpenPin(_speakerGPIOPortMap[3], PinMode.Output);
                     Console.WriteLine($"GPIO pins enabled for use: {_speakerGPIOPortMap[1]}, {_speakerGPIOPortMap[2]}, {_speakerGPIOPortMap[3]}");
-                    controller.Write(_speakerGPIOPortMap[1], PinValue.Low;
-                    controller.Write(_speakerGPIOPortMap[2], PinValue.Low;
-                    controller.Write(_speakerGPIOPortMap[3], PinValue.Low;
+                    controller.Write(_speakerGPIOPortMap[1], PinValue.Low);
+                    controller.Write(_speakerGPIOPortMap[2], PinValue.Low);
+                    controller.Write(_speakerGPIOPortMap[3], PinValue.Low);
 
                     Console.CancelKeyPress += (object sender, ConsoleCancelEventArgs eventArgs) =>
                     {
@@ -91,7 +91,6 @@ namespace PiezoPlayer
 
                                 PlayTone(controller, tone);
                             }
-
                         }
                 }
             }
