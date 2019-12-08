@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ReactFrontend.Controllers.CommunicationModels;
+using ReactFrontend.Services;
+using ReactFrontend.Models;
 using ReactFrontend.MQTTClient;
 
 namespace ReactFrontend.Controllers
@@ -44,6 +46,22 @@ namespace ReactFrontend.Controllers
         public ActionResult<List<Message>> GetMqttMessagesReactClient()
         {
             return RemoteMQTTClient.getMessages();
+        }
+
+        [HttpGet]
+        [Route("GetNextSong/{key}")]
+        public ActionResult<Song> getNextSong([FromRoute]int key)
+        {
+            AlbumService service = new AlbumService();
+            return service.getSong(key);
+        }
+
+        [HttpGet]
+        [Route("GetSongByTitle/{title}")]
+        public ActionResult<Song> getSongByTitle([FromRoute]string title)
+        {
+            AlbumService service = new AlbumService();
+            return service.getSongFromTitle(title);
         }
     }
 }
