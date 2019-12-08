@@ -34,6 +34,13 @@ namespace ReactFrontend.Controllers
             RemoteMQTTClient.postMessage(topic, message);
         }
 
+        [HttpPost("postMqttMessage/test/flicker/{message}")]
+        public void postMqttTest([FromRoute]string message)
+        {
+            string topic = "test/flicker";
+            RemoteMQTTClient.postMessage(topic, message);
+        }
+
         [HttpGet]
         [Route("GetMessageReactClient")]
         public ActionResult<List<Message>> GetMqttMessagesReactClient()
