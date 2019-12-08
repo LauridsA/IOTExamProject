@@ -293,7 +293,7 @@ namespace PiezoPlayer
                 Thread.Sleep(HzToTimespan(t.frequency));
                 controller.Write(17, PinValue.Low);
             }
-            Thread.Sleep(TimeSpan.FromMilliseconds(t.duration / 0.3));
+            Thread.Sleep(TimeSpan.FromMilliseconds(t.duration * 0.3));
         }
 
         private void PlayToneLocal(Tone t)
@@ -308,7 +308,7 @@ namespace PiezoPlayer
                 Thread.Sleep(HzToTimespan(t.frequency));
                 Console.WriteLine("Beep");
             }
-            Thread.Sleep(TimeSpan.FromMilliseconds(t.duration / 0.3));
+            Thread.Sleep(TimeSpan.FromMilliseconds(t.duration * 0.3));
         }
 
     }
