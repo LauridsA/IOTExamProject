@@ -290,7 +290,7 @@ namespace PiezoPlayer
 
             faggot.Start();
             Console.WriteLine($"Playing delaying tone forbefore playing tone for {t.duration} ms on speaker with id {t.speakerIdToPlayOn}. Will sleep for {sleeptime.TotalMilliseconds} and after {sleeptimeafter.TotalMilliseconds}");
-            while (faggot.ElapsedMilliseconds < ts.Milliseconds)
+            while (faggot.ElapsedMilliseconds < ts.TotalMilliseconds)
             {
                 controller.Write(17, PinValue.High);
                 Thread.Sleep(sleeptime);
