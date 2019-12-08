@@ -67,9 +67,9 @@ namespace PiezoPlayer
                     controller.OpenPin(_speakerGPIOPortMap[2], PinMode.Output);
                     controller.OpenPin(_speakerGPIOPortMap[3], PinMode.Output);
                     Console.WriteLine($"GPIO pins enabled for use: {_speakerGPIOPortMap[1]}, {_speakerGPIOPortMap[2]}, {_speakerGPIOPortMap[3]}");
-                    controller.Write(_speakerGPIOPortMap[1], PinValue.Low;
-                    controller.Write(_speakerGPIOPortMap[2], PinValue.Low;
-                    controller.Write(_speakerGPIOPortMap[3], PinValue.Low;
+                    controller.Write(_speakerGPIOPortMap[1], PinValue.Low);
+                    controller.Write(_speakerGPIOPortMap[2], PinValue.Low);
+                    controller.Write(_speakerGPIOPortMap[3], PinValue.Low);
 
                     Console.CancelKeyPress += (object sender, ConsoleCancelEventArgs eventArgs) =>
                     {
@@ -91,7 +91,6 @@ namespace PiezoPlayer
 
                                 PlayTone(controller, tone);
                             }
-
                         }
                 }
             }
@@ -290,8 +289,8 @@ namespace PiezoPlayer
             var sleeptimeafter = TimeSpan.FromMilliseconds(t.duration * 0.3);
 
             faggot.Start();
-            Console.WriteLine($"Playing delaying tone forbefore playing tone for {t.duration} ms on speaker with id {t.speakerIdToPlayOn}. Will sleep for {sleeptime} and after {sleeptimeafter}");
-            while (faggot.ElapsedMilliseconds < ts.Milliseconds)
+            Console.WriteLine($"Playing delaying tone forbefore playing tone for {t.duration} ms on speaker with id {t.speakerIdToPlayOn}. Will sleep for {sleeptime.TotalMilliseconds} and after {sleeptimeafter.TotalMilliseconds}");
+            while (faggot.ElapsedMilliseconds < ts.TotalMilliseconds)
             {
                 controller.Write(17, PinValue.High);
                 Thread.Sleep(sleeptime);
