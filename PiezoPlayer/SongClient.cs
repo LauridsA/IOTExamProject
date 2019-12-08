@@ -12,25 +12,25 @@ namespace PiezoPlayer
 
         public SongClient(string basepath)
         {
-            client = new RestClient(basepath+"/api/piezo/");
+            client = new RestClient(basepath);
         }
 
         public Song GetSongByTitle(string songTitle)
         {
-            var request = new RestRequest($"GetSongByTitle/{songTitle}");
+            var request = new RestRequest($"/api/piezo/GetSongByTitle /{songTitle}");
             return client.Execute<Song>(request).Data;
         }
 
         public Song GetNextSong(int currentId)
         {
-            var request = new RestRequest($"GetNextSong/{currentId}");
+            var request = new RestRequest($"/api/piezo/GetNextSong/{currentId}");
             return client.Execute<Song>(request).Data;
         }
 
 
         public Song GetPreviousSong(int currentId)
         {
-            var request = new RestRequest($"GetPrevSong/{currentId}");
+            var request = new RestRequest($"/api/piezo/GetPrevSong/{currentId}");
             return client.Execute<Song>(request).Data;
         }
     }
