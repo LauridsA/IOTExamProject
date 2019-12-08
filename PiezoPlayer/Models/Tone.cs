@@ -9,13 +9,11 @@ namespace PiezoPlayer.Models
         public int speakerIdToPlayOn;
         public int frequency;
         public int duration;
-        public int delayBeforePlaying;
-        public Tone(int speakerId, int frequency, int dur, int delaybeforeplaying)
+        public Tone(int speakerId, int frequency, int dur)
         {
             this.speakerIdToPlayOn = speakerId;
             this.frequency = frequency;
             this.duration = dur;
-            this.delayBeforePlaying = delaybeforeplaying;
         }
     }
 }

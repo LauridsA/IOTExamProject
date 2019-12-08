@@ -44,15 +44,15 @@ namespace PiezoPlayer
                 (
                     new List<Tone>()
                     { //speaker id, frequency in hz, duration, delay before playing
-                        new Tone(1, 600, 500, 0),
-                        new Tone(1, 600, 500, 20),
-                        new Tone(1, 600, 500, 20),
-                        new Tone(1, 250, 600, 20),
-                        new Tone(1, 300, 150, 20),
-                        new Tone(1, 600, 500, 20),
-                        new Tone(1, 250, 350, 20),
-                        new Tone(1, 300, 150, 20),
-                        new Tone(1, 600, 650, 20)
+                        new Tone(1, 750, 500),
+                        new Tone(1, 750, 500),
+                        new Tone(1, 750, 500),
+                        new Tone(1, 150, 600),
+                        new Tone(1, 400, 150),
+                        new Tone(1, 750, 500),
+                        new Tone(1, 150, 600),
+                        new Tone(1, 400, 150),
+                        new Tone(1, 750, 500)
                     }
                 );
             // (Song song, Tone nextTone, Tone previousTone, Tone firstTone, Tone lastTone, int speakerIdToPlayOn, int delay)
@@ -86,7 +86,6 @@ namespace PiezoPlayer
                                 while (paused)
                                     Thread.Sleep(1000);
 
-                                Console.WriteLine($"Playing delaying tone for {tone.delayBeforePlaying} before playing tone for {tone.duration} ms on speaker with id {tone.speakerIdToPlayOn}");
                                 PlayTone(controller, tone);
                             }
 
@@ -277,7 +276,7 @@ namespace PiezoPlayer
 
         private TimeSpan HzToTimespan(int hz)
         {
-            return TimeSpan.FromMilliseconds((1/hz)*1000);
+            return TimeSpan.FromMilliseconds((1 / hz) * 1000);
         }
 
         private void PlayTone(GpioController controller, Tone t)
@@ -286,13 +285,14 @@ namespace PiezoPlayer
             TimeSpan ts = TimeSpan.FromMilliseconds(t.duration);
 
             faggot.Start();
-
+            Console.WriteLine($"Playing delaying tone forbefore playing tone for {t.duration} ms on speaker with id {t.speakerIdToPlayOn}");
             while (faggot.ElapsedMilliseconds < ts.Milliseconds)
             {
                 controller.Write(17, PinValue.High);
                 Thread.Sleep(HzToTimespan(t.frequency));
                 controller.Write(17, PinValue.Low);
             }
+            controller.Write(17, PinValue.Low);
             Thread.Sleep(TimeSpan.FromMilliseconds(t.duration * 0.3));
         }
 
