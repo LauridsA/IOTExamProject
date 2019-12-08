@@ -6,11 +6,12 @@ namespace PiezoPlayer.Models
 {
     public class Song
     {
-        public List<Tone> tones;
+        public List<Tone> nodes;
+        public string title;
+        public int id;
 
-        public Song(List<Tone> tunes)
+        public Song()
         {
-            tones = tunes;
         }
     }
 }

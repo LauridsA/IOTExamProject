@@ -14,6 +14,8 @@ namespace PiezoPlayer
 {
     public class PiezoPlayerClient : IObserver<MqttApplicationMessage>
     {
+        MQTTService client;
+        SongClient sClient;
         static bool playing = false;
         static bool paused = false;
         static long v = 5;
@@ -23,7 +25,8 @@ namespace PiezoPlayer
 
         public async Task SetupPlayer()
         {
-            MQTTService client = new MQTTService();
+            client = new MQTTService();
+            sClient = new SongClient("localhost:44316");
             await client.SetupClient(12393, "broker.busk.cf", "piezo", "piezopass", "PiezoPlayer");
             await client.Subscribe("Song/#");
             await client.Subscribe("test/#"); //REMOVE FOR PROD
@@ -40,21 +43,6 @@ namespace PiezoPlayer
 
         public async Task Play()
         {
-            s = new Song
-                (
-                    new List<Tone>()
-                    { //speaker id, frequency in hz, duration, delay before playing
-                        new Tone(1, 750, 500),
-                        new Tone(1, 750, 500),
-                        new Tone(1, 750, 500),
-                        new Tone(1, 150, 600),
-                        new Tone(1, 400, 150),
-                        new Tone(1, 750, 500),
-                        new Tone(1, 150, 600),
-                        new Tone(1, 400, 150),
-                        new Tone(1, 750, 500)
-                    }
-                );
             // (Song song, Tone nextTone, Tone previousTone, Tone firstTone, Tone lastTone, int speakerIdToPlayOn, int delay)
 
             bool gpio = true;
@@ -79,11 +67,14 @@ namespace PiezoPlayer
                     while (true)
                         while (playing)
                         {
-                            foreach (var tone in s.tones)
+                            if (s == null)
+                                break;
+
+                            foreach (var tone in s.nodes)
                             {
                                 if (!playing)
                                 {
-                                    controller.Write(_speakerGPIOPortMap[tone.speakerIdToPlayOn], PinValue.Low);
+                                    controller.Write(17, PinValue.Low);
                                     break;
                                 }
                                 while (paused)
@@ -105,17 +96,17 @@ namespace PiezoPlayer
                 while (true)
                     while (playing)
                     {
-                        foreach (var tone in s.tones)
+                        foreach (var tone in s.nodes)
                         {
                             if (!playing)
                             {
-                                Console.Write($"{_speakerGPIOPortMap[tone.speakerIdToPlayOn]} low");
+                                Console.Write($"17 low");
                                 break;
                             }
                             while (paused)
                                 Thread.Sleep(1000);
 
-                            PlayToneLocal(tone);
+                            //PlayToneLocal(tone);
 
                         }
                     }
@@ -204,14 +195,32 @@ namespace PiezoPlayer
                 if (payload == "next")
                 {
                     // next track
+                    if (s == null)
+                        s = sClient.GetNextSong(1);
+                    else
+                    {
+                        playing = false;
+                        Thread.Sleep(1000);
+                        s = sClient.GetNextSong(s.id);
+                    }
                 }
                 else if (payload == "prev")
                 {
                     // previous track
+                    if (s == null)
+                        s = sClient.GetPreviousSong(1);
+                    else
+                    {
+                        playing = false;
+                        Thread.Sleep(1000);
+                        s = sClient.GetPreviousSong(s.id);
+                    }
                 }
                 else
                 {
-                    //Look up payload as song in API
+                    playing = false;
+                    Thread.Sleep(1000);
+                    s = sClient.GetSongByTitle(payload);
                 }
 
                 // Get value.payload from backend (songname)
@@ -221,18 +230,23 @@ namespace PiezoPlayer
                 if (payload == "play")
                 {
                     playing = true;
+                    client.Publish("status", "Playing");
                 }
                 else if (payload == "stop")
                 {
                     playing = false;
+                    client.Publish("status", "Stopped");
                 }
                 else if (payload == "pause")
                 {
                     paused = true;
+                    client.Publish("status", "Paused");
+
                 }
                 else if (payload == "unpause")
                 {
                     paused = false;
+                    client.Publish("status", "Unpaused");
                 }
             }
             if (topic == "test/flicker")
@@ -276,43 +290,37 @@ namespace PiezoPlayer
             }
         }
 
-        private TimeSpan HzToTimespan(int hz)
-        {
-            return TimeSpan.FromMilliseconds((1 / hz) * 1000);
-        }
-
         private void PlayTone(GpioController controller, Tone t)
         {
-            Stopwatch faggot = new Stopwatch();
-            TimeSpan ts = TimeSpan.FromMilliseconds(t.duration);
+            Stopwatch youarebeingwatched = new Stopwatch();
             var sleeptimeafter = TimeSpan.FromMilliseconds(t.duration * 0.3);
 
-            faggot.Start();
-            Console.WriteLine($"Playing delaying tone forbefore playing tone for {t.duration} ms on speaker with id {t.speakerIdToPlayOn}. Will sleep for {ts.TotalMilliseconds} and after {sleeptimeafter.TotalMilliseconds}");
-            while (faggot.ElapsedMilliseconds < ts.TotalMilliseconds)
+            youarebeingwatched.Start();
+            Console.WriteLine($"Playing delaying tone forbefore playing tone for {t.duration} ms. Will sleep for {t.frequency} ms. after {sleeptimeafter.TotalMilliseconds} sleep ms");
+            while (youarebeingwatched.ElapsedMilliseconds < t.duration)
             {
                 controller.Write(17, PinValue.High);
-                Thread.Sleep(sleeptime);
+                Thread.Sleep(t.frequency);
                 controller.Write(17, PinValue.Low);
             }
             controller.Write(17, PinValue.Low);
             Thread.Sleep(sleeptimeafter);
         }
 
-        private void PlayToneLocal(Tone t)
-        {
-            Stopwatch faggot = new Stopwatch();
-            TimeSpan ts = TimeSpan.FromMilliseconds(t.duration);
+        //private void PlayToneLocal(Tone t)
+        //{
+        //    Stopwatch faggot = new Stopwatch();
+        //    TimeSpan ts = TimeSpan.FromMilliseconds(t.duration);
 
-            faggot.Start();
-            while (faggot.ElapsedMilliseconds < ts.Milliseconds)
-            {
-                Console.WriteLine("Beep");
-                Thread.Sleep(HzToTimespan(t.frequency));
-                Console.WriteLine("Beep");
-            }
-            Thread.Sleep(TimeSpan.FromMilliseconds(t.duration * 0.3));
-        }
+        //    faggot.Start();
+        //    while (faggot.ElapsedMilliseconds < ts.Milliseconds)
+        //    {
+        //        Console.WriteLine("Beep");
+        //        Thread.Sleep(HzToTimespan(t.frequency));
+        //        Console.WriteLine("Beep");
+        //    }
+        //    Thread.Sleep(TimeSpan.FromMilliseconds(t.duration * 0.3));
+        //}
 
     }
 }
